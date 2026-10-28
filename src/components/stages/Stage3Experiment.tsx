@@ -59,34 +59,37 @@ export const Stage3Experiment: FC<Stage3ExperimentProps> = ({
       {/* Main Experiment Card */}
       <div className="bg-[#181c2a] border border-[#242a3e] rounded-2xl p-6 lg:p-8 shadow-premium-card space-y-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 pb-6 border-b border-zinc-200">
-          <div>
-            <div className="flex items-center gap-2 text-teal-700 text-xs font-mono uppercase tracking-wider mb-1.5 font-semibold">
-              <FlaskConical className="w-4 h-4" />
-              <span>Stage 3: Validation Experiment Design</span>
-            </div>
-            <h2 className="text-xl font-bold text-zinc-950 tracking-tight font-sans">
+        <div className="space-y-4 pb-6 border-b border-zinc-200">
+          <div className="flex items-center gap-2 text-teal-700 text-xs font-mono uppercase tracking-wider font-semibold">
+            <FlaskConical className="w-4 h-4 shrink-0" />
+            <span>Stage 3: Validation Experiment Design</span>
+          </div>
+
+          <div className="space-y-1.5">
+            <h2 className="text-xl sm:text-2xl font-bold text-zinc-950 tracking-tight font-sans leading-snug break-words">
               {experiment.title || 'Targeted Behavioral Inquiry Experiment'}
             </h2>
-            <p className="text-sm text-zinc-600 mt-1 leading-relaxed font-sans">
+            <p className="text-sm text-zinc-600 leading-relaxed font-sans max-w-3xl">
               The fastest, simplest test to see if your biggest assumption holds true with real people.
             </p>
           </div>
 
-          <div className="flex items-center gap-2.5 text-xs font-mono shrink-0">
-            {experiment.estimatedEffort && (
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-50 border border-zinc-200 text-zinc-700 font-medium shadow-2xs">
-                <Clock className="w-3.5 h-3.5 text-teal-700 shrink-0" />
-                <span>{experiment.estimatedEffort}</span>
-              </div>
-            )}
-            {experiment.targetParticipants && (
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-50 border border-zinc-200 text-zinc-700 font-medium shadow-2xs">
-                <Users className="w-3.5 h-3.5 text-indigo-700 shrink-0" />
-                <span>{experiment.targetParticipants}</span>
-              </div>
-            )}
-          </div>
+          {(experiment.estimatedEffort || experiment.targetParticipants) && (
+            <div className="flex flex-wrap items-center gap-2.5 pt-1 text-xs font-mono">
+              {experiment.estimatedEffort && (
+                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-50 border border-zinc-200 text-zinc-700 font-medium shadow-2xs">
+                  <Clock className="w-3.5 h-3.5 text-teal-700 shrink-0" />
+                  <span>{experiment.estimatedEffort}</span>
+                </div>
+              )}
+              {experiment.targetParticipants && (
+                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-50 border border-zinc-200 text-zinc-700 font-medium shadow-2xs">
+                  <Users className="w-3.5 h-3.5 text-indigo-700 shrink-0" />
+                  <span>{experiment.targetParticipants}</span>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Hypothesis & Objective */}
@@ -127,6 +130,7 @@ export const Stage3Experiment: FC<Stage3ExperimentProps> = ({
                 type="button"
                 onClick={handleCopyQuestions}
                 title="Copy questions to clipboard"
+                aria-label="Copy inquiry questions cheat sheet to clipboard"
                 className="flex items-center gap-1 text-[11px] font-mono text-zinc-700 hover:text-zinc-950 bg-zinc-100 hover:bg-zinc-200/80 border border-zinc-200 px-2.5 py-1 rounded-md transition-colors active:scale-[0.97] cursor-pointer"
               >
                 {copied ? (

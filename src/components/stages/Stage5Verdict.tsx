@@ -15,6 +15,7 @@ import {
   Copy,
   Check,
   Calendar,
+  type LucideIcon,
 } from 'lucide-react';
 import type {
   DecisionBrief,
@@ -40,7 +41,7 @@ const VERDICT_CONFIG: Record<
     bg: string;
     text: string;
     border: string;
-    icon: any;
+    icon: LucideIcon;
     summary: string;
     actionProtocol: string[];
   }
@@ -231,6 +232,7 @@ ${config.actionProtocol.map((s, i) => `${i + 1}. ${s}`).join('\n')}
             <button
               type="button"
               onClick={handleCopyBrief}
+              aria-label="Copy executive decision brief markdown to clipboard"
               className="flex items-center gap-2 px-3 py-2 rounded-xl border border-[#212a45] bg-[#151b2e] hover:bg-[#1c243c] text-slate-300 hover:text-white text-xs font-medium transition-all active:scale-[0.97] cursor-pointer"
             >
               {copied ? (

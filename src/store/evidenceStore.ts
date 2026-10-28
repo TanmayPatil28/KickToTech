@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import type {
   AnalysisResult,
   CaseState,
+  DecisionBrief,
   Finding,
   LedgerEntry,
   ProblemInput,
@@ -308,7 +309,7 @@ export function useEvidenceStore() {
         stage: 'EVIDENCE_REVIEWED',
         currentStage: 'EVIDENCE_REVIEWED',
         verdict,
-        decisionBrief: verdict as unknown as any,
+        decisionBrief: verdict as unknown as DecisionBrief,
         ledger: [
           ...prev.ledger,
           addLedgerEntry(

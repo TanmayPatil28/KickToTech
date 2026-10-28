@@ -40,6 +40,7 @@ export const EvidenceLedger: FC<EvidenceLedgerProps> = ({
           <button
             type="button"
             onClick={() => setViewMode('findings')}
+            aria-label="View recorded findings ledger"
             className={`px-2.5 py-1 rounded-md transition-all active:scale-[0.97] cursor-pointer ${
               viewMode === 'findings'
                 ? 'bg-zinc-900 text-white font-semibold shadow-xs'
@@ -51,6 +52,7 @@ export const EvidenceLedger: FC<EvidenceLedgerProps> = ({
           <button
             type="button"
             onClick={() => setViewMode('timeline')}
+            aria-label="View audit timeline"
             className={`px-2.5 py-1 rounded-md transition-all active:scale-[0.97] cursor-pointer ${
               viewMode === 'timeline'
                 ? 'bg-zinc-900 text-white font-semibold shadow-xs'
@@ -95,6 +97,7 @@ export const EvidenceLedger: FC<EvidenceLedgerProps> = ({
                       type="button"
                       onClick={() => onRemoveFinding(finding.id)}
                       title="Remove this finding"
+                      aria-label={`Remove finding #${idx + 1}`}
                       className="text-slate-400 hover:text-rose-600 p-0.5 transition-colors cursor-pointer active:scale-[0.97]"
                     >
                       <Trash2 className="w-3.5 h-3.5" />

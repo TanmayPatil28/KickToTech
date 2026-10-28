@@ -1,4 +1,4 @@
-import { useState, type FC } from 'react';
+import { useState, useEffect, type FC } from 'react';
 import {
   Compass,
   AlertTriangle,
@@ -27,6 +27,15 @@ export const Header: FC<HeaderProps> = ({
 }) => {
   const [showDemoMenu, setShowDemoMenu] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+
+  useEffect(() => {
+    if (!showResetConfirm) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setShowResetConfirm(false);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showResetConfirm]);
 
   return (
     <>
@@ -63,6 +72,9 @@ export const Header: FC<HeaderProps> = ({
               <button
                 type="button"
                 onClick={() => setShowDemoMenu(!showDemoMenu)}
+                aria-haspopup="true"
+                aria-expanded={showDemoMenu}
+                aria-label="Select demo scenario"
                 className={`flex items-center gap-2 text-xs font-medium px-3 py-1.5 min-h-[36px] rounded-lg border transition-all duration-150 ease-out active:scale-[0.97] cursor-pointer select-none shadow-2xs ${
                   isDemoMode
                     ? 'bg-amber-50 text-amber-900 border-amber-300 hover:bg-amber-100/70'
@@ -82,12 +94,17 @@ export const Header: FC<HeaderProps> = ({
               </button>
 
               {showDemoMenu && (
-                <div className="absolute right-0 mt-1.5 w-72 bg-white border border-zinc-200 rounded-xl shadow-premium-dropdown py-1.5 z-50 text-xs animate-stage-enter">
+                <div
+                  role="menu"
+                  aria-label="Deterministic Demo Scenarios"
+                  className="absolute right-0 mt-1.5 w-72 bg-white border border-zinc-200 rounded-xl shadow-premium-dropdown py-1.5 z-50 text-xs animate-stage-enter"
+                >
                   <div className="px-3.5 py-1.5 text-[10px] text-zinc-400 font-mono uppercase tracking-wider border-b border-zinc-100 font-semibold">
                     Deterministic Scenarios
                   </div>
                   <button
                     type="button"
+                    role="menuitem"
                     onClick={() => {
                       onSelectScenario('vague_study');
                       setShowDemoMenu(false);
@@ -101,6 +118,7 @@ export const Header: FC<HeaderProps> = ({
                   </button>
                   <button
                     type="button"
+                    role="menuitem"
                     onClick={() => {
                       onSelectScenario('contradictory_study');
                       setShowDemoMenu(false);
@@ -122,6 +140,7 @@ export const Header: FC<HeaderProps> = ({
               size="sm"
               onClick={() => setShowResetConfirm(true)}
               title="Reset current validation case"
+              aria-label="Start new validation case"
               icon={<RotateCcw className="w-3.5 h-3.5 text-zinc-500" />}
               className="text-xs min-h-[36px]"
             >
@@ -146,6 +165,7 @@ export const Header: FC<HeaderProps> = ({
               <button
                 type="button"
                 onClick={onReset}
+                aria-label="Exit demo scenario"
                 className="text-amber-900 font-semibold underline hover:text-amber-950 text-[11px] ml-2 cursor-pointer active:scale-[0.97]"
               >
                 Exit Demo
@@ -157,18 +177,24 @@ export const Header: FC<HeaderProps> = ({
 
       {/* Confirmation Modal */}
       {showResetConfirm && (
-        <div className="fixed inset-0 bg-zinc-950/40 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-stage-enter">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="reset-modal-title"
+          className="fixed inset-0 bg-zinc-950/40 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-stage-enter"
+        >
           <div className="bg-white border border-zinc-200/90 rounded-2xl max-w-md w-full p-6 shadow-premium-dropdown space-y-4">
             <div className="flex items-center justify-between pb-2 border-b border-zinc-100">
               <div className="flex items-center gap-2 text-rose-600">
                 <AlertTriangle className="w-5 h-5" />
-                <h3 className="font-semibold text-base text-zinc-950">
+                <h3 id="reset-modal-title" className="font-semibold text-base text-zinc-950">
                   Start New Validation Case?
                 </h3>
               </div>
               <button
                 type="button"
                 onClick={() => setShowResetConfirm(false)}
+                aria-label="Close dialog"
                 className="text-zinc-400 hover:text-zinc-950 p-1 rounded-lg cursor-pointer transition-colors"
               >
                 <X className="w-4 h-4" />

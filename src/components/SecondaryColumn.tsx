@@ -22,7 +22,7 @@ export const SecondaryColumn: FC<SecondaryColumnProps> = ({
   const assumptions = state.analysis?.assumptions || [];
   const findings = state.findings || [];
   const ledger = state.ledger || [];
-  const currentStage = state.stage || (state as any).currentStage || 'DRAFT';
+  const currentStage = state.stage || ('currentStage' in state ? String((state as unknown as { currentStage: string }).currentStage) : 'DRAFT');
 
   return (
     <aside className={`space-y-5 ${className}`}>

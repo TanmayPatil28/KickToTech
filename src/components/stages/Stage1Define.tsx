@@ -92,6 +92,7 @@ export const Stage1Define: FC<Stage1DefineProps> = ({
                   'During midterm and final exams across university courses.'
                 )
               }
+              aria-label="Load Vague Idea sample scenario"
               className="px-3 py-1.5 min-h-[36px] rounded-lg bg-zinc-100 hover:bg-zinc-200/80 text-amber-800 border border-zinc-200 hover:border-amber-400 text-xs font-medium transition-all duration-150 ease-out active:scale-[0.97] cursor-pointer shadow-2xs"
             >
               Vague Idea
@@ -107,6 +108,7 @@ export const Stage1Define: FC<Stage1DefineProps> = ({
                   'No network access allowed at machine stations.'
                 )
               }
+              aria-label="Load Specific Problem sample scenario"
               className="px-3 py-1.5 min-h-[36px] rounded-lg bg-zinc-100 hover:bg-zinc-200/80 text-emerald-800 border border-zinc-200 hover:border-emerald-400 text-xs font-medium transition-all duration-150 ease-out active:scale-[0.97] cursor-pointer shadow-2xs"
             >
               Specific Problem
@@ -204,6 +206,8 @@ export const Stage1Define: FC<Stage1DefineProps> = ({
             <button
               type="button"
               onClick={() => setShowOptionalFields(!showOptionalFields)}
+              aria-expanded={showOptionalFields}
+              aria-controls="optional-fields-section"
               className="flex items-center gap-2 text-xs font-semibold text-zinc-700 uppercase tracking-wider font-mono hover:text-zinc-950 transition-colors cursor-pointer"
             >
               <span className="w-5 h-5 rounded-full bg-zinc-100 border border-zinc-200 text-zinc-700 text-[11px] font-mono font-bold flex items-center justify-center">
@@ -221,7 +225,7 @@ export const Stage1Define: FC<Stage1DefineProps> = ({
             </span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div id="optional-fields-section" className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="md:col-span-2">
               <label htmlFor="context" className="block text-xs font-semibold text-zinc-800 mb-1.5">
                 <span>Operational Context (Where & When the friction occurs)</span>

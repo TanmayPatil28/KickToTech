@@ -11,7 +11,7 @@ import { Stage4Findings } from './components/stages/Stage4Findings.tsx';
 import { Stage5Verdict } from './components/stages/Stage5Verdict.tsx';
 import { SecondaryColumn } from './components/SecondaryColumn.tsx';
 import { AlertCircle, X } from 'lucide-react';
-import type { ProblemInput } from './types/index.ts';
+import type { ProblemInput, Verdict } from './types/index.ts';
 import { api } from './services/api.ts';
 
 export function App() {
@@ -46,8 +46,8 @@ export function App() {
     try {
       const res = await api.analyzeProblem({
         problem: problemData,
-        isDemo: state.isDemoMode || state.isDemo,
-        demoScenario: (state.demoScenarioId as any) || (state.demoScenario as any),
+        isDemo: Boolean(state.isDemoMode || state.isDemo),
+        demoScenario: state.demoScenarioId || state.demoScenario || undefined,
       });
 
       if (!res.success || !res.data) {
@@ -55,9 +55,10 @@ export function App() {
       }
 
       setAnalysis(res.data);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Analyze error:', err);
-      setApiError(err.message || 'Analysis request failed. Please verify connection or retry.');
+      const message = err instanceof Error ? err.message : 'Analysis request failed. Please verify connection or retry.';
+      setApiError(message);
     } finally {
       setIsLoading(false);
     }
@@ -80,20 +81,25 @@ export function App() {
         problem: state.problem,
         analysis: state.analysis,
         assumptions: state.analysis.assumptions,
-        isDemo: state.isDemoMode || state.isDemo,
-        demoScenario: (state.demoScenarioId as any) || (state.demoScenario as any),
+        isDemo: Boolean(state.isDemoMode || state.isDemo),
+        demoScenario: state.demoScenarioId || state.demoScenario || undefined,
       });
 
       if (!res.success || !res.data) {
         throw new Error(res.error || 'Failed to design validation experiment.');
       }
 
-      const exp = (res.data as any).primary || res.data;
-      setExperiment(exp);
+      const exp = (res.data && 'primary' in res.data)
+        ? (res.data as unknown as { primary: typeof state.experiment }).primary
+        : res.data;
+      if (exp) {
+        setExperiment(exp);
+      }
       navigateTo('TEST_DEFINED');
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Test generation error:', err);
-      setApiError(err.message || 'Failed to generate experiment design.');
+      const message = err instanceof Error ? err.message : 'Failed to generate experiment design.';
+      setApiError(message);
     } finally {
       setIsLoading(false);
     }
@@ -113,19 +119,36 @@ export function App() {
         analysis: state.analysis || undefined,
         experiment: state.experiment || undefined,
         findings: state.findings,
-        isDemo: state.isDemoMode || state.isDemo,
-        demoScenario: (state.demoScenarioId as any) || (state.demoScenario as any),
+        isDemo: Boolean(state.isDemoMode || state.isDemo),
+        demoScenario: state.demoScenarioId || state.demoScenario || undefined,
       });
 
       if (!res.success || !res.data) {
         throw new Error(res.error || 'Failed to review evidence findings.');
       }
 
-      setVerdict(res.data as any);
+      const brief = res.data;
+      const normalizedCategory = brief.category || brief.verdict;
+      const verdictPayload: Verdict = {
+        category: normalizedCategory,
+        verdict: brief.verdict,
+        rationale: brief.rationale || 'Evidence evaluation completed against recorded findings.',
+        updatedProblemStatement: brief.updatedProblemStatement,
+        supportedClaims: brief.supportedClaims || [],
+        unsupportedClaims: brief.unsupportedClaims || [],
+        contradictoryFindings: brief.contradictoryFindings || [],
+        remainingUncertainties: brief.remainingUncertainties || [],
+        assumptionStatusUpdates: (brief.assumptionStatusUpdates as unknown as Verdict['assumptionStatusUpdates']) || [],
+        recommendedNextExperiment: brief.recommendedNextExperiment || brief.recommendedNextSteps?.[0] || 'Follow-up behavioral test',
+        recommendedNextSteps: brief.recommendedNextSteps,
+      };
+
+      setVerdict(verdictPayload);
       navigateTo('EVIDENCE_REVIEWED');
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Evidence review error:', err);
-      setApiError(err.message || 'Evidence review synthesis failed.');
+      const message = err instanceof Error ? err.message : 'Evidence review synthesis failed.';
+      setApiError(message);
     } finally {
       setIsLoading(false);
     }
@@ -152,7 +175,11 @@ export function App() {
       {/* Global Alerts / Errors */}
       {(transitionError || apiError) && (
         <div className="max-w-7xl mx-auto w-full px-4 lg:px-8 mt-4 animate-stage-enter">
-          <div className="p-4 rounded-xl bg-rose-950/40 border border-rose-500/40 text-rose-200 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md font-sans">
+          <div
+            role="alert"
+            aria-live="polite"
+            className="p-4 rounded-xl bg-rose-950/40 border border-rose-500/40 text-rose-200 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md font-sans"
+          >
             <div className="flex items-start sm:items-center gap-2.5">
               <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5 sm:mt-0" />
               <span className="font-medium leading-relaxed">{transitionError || apiError}</span>
@@ -177,6 +204,7 @@ export function App() {
                   clearTransitionError();
                   setApiError(null);
                 }}
+                aria-label="Dismiss error notification"
                 className="text-rose-400 hover:text-rose-200 p-1 rounded-md transition-colors cursor-pointer active:scale-[0.97]"
               >
                 <X className="w-4 h-4" />

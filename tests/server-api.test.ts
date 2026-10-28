@@ -1,11 +1,11 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import http, { type Server } from 'node:http';
 import type { AddressInfo } from 'node:net';
-import { problemPilotApiPlugin } from '../src/server/apiMiddleware';
+import { problemPilotApiPlugin } from '../server/apiMiddleware';
 import {
   analyzeProblemWithGemini,
   reviewEvidenceWithGemini,
-} from '../src/server/geminiService';
+} from '../server/geminiService';
 import { DEMO_SCENARIO_A, DEMO_SCENARIO_B_FINDINGS } from '../src/domain/demoData';
 import type {
   ProblemInput,
@@ -16,7 +16,7 @@ describe('Server API Endpoints & Middleware Contracts (Tiers 1, 2, 4)', () => {
   let baseUrl: string;
 
   beforeAll(async () => {
-    const plugin = problemPilotApiPlugin();
+    const plugin = problemPilotApiPlugin({ fallbackOnError: true });
     let middleware: (req: http.IncomingMessage, res: http.ServerResponse, next: () => void) => Promise<void> | void;
 
     // Extract the Connect middleware from the Vite plugin hook

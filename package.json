@@ -1,11 +1,27 @@
 {
-  "name": "temp-vite",
-  "private": true,
-  "version": "0.0.0",
+  "name": "problempilot",
+  "description": "ProblemPilot — The Evidence Challenge: An AI-assisted problem-validation application for engineers, student innovators, and founders",
+  "version": "1.0.0",
+  "author": "Tanmay Anil Patil",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TanmayPatil28/KickToTech.git"
+  },
+  "keywords": [
+    "problem-validation",
+    "evidence-challenge",
+    "ai-evaluator",
+    "gemini-api",
+    "react-19",
+    "vite",
+    "typescript"
+  ],
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "typecheck": "tsc --noEmit",
     "lint": "oxlint",
     "preview": "vite preview",
     "test": "vitest run",

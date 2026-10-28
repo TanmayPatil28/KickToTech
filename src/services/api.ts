@@ -8,6 +8,15 @@ import type {
   ValidationExperiment,
 } from '../types/index.ts';
 
+interface RawApiResponse<T> {
+  success?: boolean;
+  data?: T;
+  error?: string;
+  code?: ApiResponse<T>['code'];
+  isLive?: boolean;
+  isDemo?: boolean;
+}
+
 /**
  * Generic helper for executing POST requests with comprehensive error trapping.
  * Guarantees that promises resolve to an ApiResponse<T> and never produce unhandled rejections.
@@ -22,9 +31,9 @@ async function postJson<TReq, TRes>(endpoint: string, payload: TReq): Promise<Ap
       body: JSON.stringify(payload),
     });
 
-    let json: any = null;
+    let json: RawApiResponse<TRes> | null = null;
     try {
-      json = await res.json();
+      json = (await res.json()) as RawApiResponse<TRes>;
     } catch {
       return {
         success: false,
@@ -55,10 +64,11 @@ async function postJson<TReq, TRes>(endpoint: string, payload: TReq): Promise<Ap
       isLive: json.isLive,
       isDemo: json.isDemo,
     };
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Failed to connect to validation server. Please check your network.';
     return {
       success: false,
-      error: err?.message || 'Failed to connect to validation server. Please check your network.',
+      error: message,
       code: 'NETWORK_ERROR',
     };
   }

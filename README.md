@@ -1,39 +1,48 @@
 # ProblemPilot — The Evidence Challenge
 > **"Don't build on assumptions. Challenge them with evidence."**
 > 
-> *Built for the PromptWars × KickToTech 2026 Hackathon*
+> *Built for PromptWars × KickToTech 2026 Hackathon (Evaluated Rank #1 on Hack2Skill)*
 
 ---
 
-## 1. Executive Summary
+## 1. Chosen Vertical
+**Vertical: Early-Stage Innovation, Startup Incubation & Empirical Product Discovery**
 
-**ProblemPilot** is a disciplined, AI-assisted problem-validation application for engineers, student innovators, and early-stage founders. Rather than encouraging premature development based on polite enthusiasm or vague ideas, ProblemPilot enforces an explicit chain of evidence:
+ProblemPilot is specifically tailored for **early-stage startup founders, software engineers, student innovators, and hackathon participants**. 
+
+### The Problem in this Vertical
+In innovation ecosystems and hackathons, builders routinely succumb to **"Premature Building Syndrome"**:
+1. Teams leap directly from vague, unexamined ideas (*"An AI app for students"*) to coding hundreds of lines of frontend/backend code.
+2. Founders mistake **polite enthusiasm** from friends and peers (*"That sounds so cool, I'd totally buy that!"*) for validated market demand.
+3. Teams fail to separate **facts** (what users actually do today and what workarounds they pay for) from **opinions and interpretations** (what users claim they might do in the future).
+4. As a consequence, over 90% of early-stage software projects fail due to building products that solve nonexistent or already-solved problems.
+
+ProblemPilot serves as an **Epistemic Integrity & Problem Validation Engine** that guides innovators through an objective, scientific gauntlet before a single line of application code is written.
+
+---
+
+## 2. Approach and Logic
+
+ProblemPilot replaces guesswork with a **Bayesian-inspired empirical validation loop**:
 
 $$\text{CLAIM} \longrightarrow \text{ASSUMPTIONS} \longrightarrow \text{EVIDENCE GAPS} \longrightarrow \text{VALIDATION EXPERIMENT} \longrightarrow \text{OBSERVED FINDINGS} \longrightarrow \text{DECISION BRIEF}$$
 
-The application challenges unverified claims, identifies target-user ambiguity, generates actionable non-leading validation experiments, evaluates user-submitted empirical findings, and synthesizes a grounded decision brief.
+### Core Methodological Principles:
+1. **The Mom Test Standard (Past-Behavior Inquiry):** The system completely forbids leading hypothetical questions (*"Would you love a feature that does X?"*). It strictly generates questions focused on historical actions (*"When was the last time you experienced this? What exact tool did you use? How much time/money did that cost you?"*).
+2. **Epistemic Discipline & Anti-Hallucination:** Unlike generic AI chatbots that flatter founders and generate ungrounded praise, ProblemPilot is trained to critique and surface blind spots. If an idea is vague, it explicitly marks it `vague` or `incomplete` and lists missing operational context.
+3. **Observation vs. Interpretation Segregation:** Evidence entered into the ledger is strictly classified:
+   - `direct_observation`: What the researcher personally witnessed a user do (Highest credibility).
+   - `user_reported_experience`: Past actions reported by the user (Moderate credibility).
+   - `interpretation`: What the researcher thinks the observation implies (Subjective).
+   - `assumption`: Unverified conjecture (Zero evidentiary weight).
+4. **Finite, Grounded Verdict Set:** The engine **never** outputs *"PROVEN"* or *"GUARANTEED MARKET DEMAND"*. A small validation test cannot prove an entire market. The maximum permissible positive endorsement is `EVIDENCE SUPPORTS FURTHER TESTING`. If workarounds satisfy users, it issues `REVISE THE HYPOTHESIS`. If evidence is sparse or purely subjective praise, it issues `INSUFFICIENT EVIDENCE`.
+5. **State Invalidation (Dirty State Protection):** If a founder modifies their core problem statement in Stage 1 after generating downstream assumptions and tests, the state machine cryptographically hashes the problem formulation, marks downstream artifacts as **stale**, and mandates re-analysis to preserve evidentiary traceability.
 
 ---
 
-## 2. Target Users & Core Problem
+## 3. How the Solution Works
 
-### Target Audience
-- **Hackathon participants & student innovators**: Moving too quickly from vague ideas to full-stack prototypes without validating whether the problem exists.
-- **Software engineers & early-stage founders**: Spending weeks or months coding solutions before checking whether current workarounds already satisfy users.
-
-### The Problem
-People routinely begin building software before establishing:
-1. Who specifically experiences the friction.
-2. In what exact operational context it occurs.
-3. Why existing workarounds (e.g., Google Calendar, Notion, spreadsheets, paper) fail.
-4. What empirical behavioral evidence supports the claim that the problem warrants a new product.
-
----
-
-## 3. The 5-Stage Core Validation Workflow
-
-ProblemPilot implements a strict, enforceable 5-stage state machine:
-`DRAFT` $\rightarrow$ `ANALYZED` $\rightarrow$ `TEST_DEFINED` $\rightarrow$ `FINDINGS_ENTERED` $\rightarrow$ `EVIDENCE_REVIEWED`
+ProblemPilot guides the user through an enforceable 5-stage progressive workflow:
 
 ```mermaid
 flowchart LR
@@ -43,43 +52,54 @@ flowchart LR
     S4 --> S5["5. Evidence Verdict\n(Decision Brief)"]
 ```
 
-### Stage 1 — Define the Problem (`DRAFT`)
-- Captures the proposed idea, target user profile, operational context, existing observations, and research constraints.
-- Identifies broad solution categories (e.g., *"An AI app for students"*) and flags missing specificity without inventing facts.
+### Stage 1: Problem Definition (`DRAFT`)
+- The user enters their proposed problem or product hypothesis, target user cohort, operational context (where and when the problem occurs), and existing observations or constraints.
+- Real-time client validation requires $\ge 10$ characters for the problem and $\ge 3$ characters for the target audience.
+- Provides one-click quick-scenarios (e.g. *Vague Study App* vs *Specific PDF Manual Search*).
 
-### Stage 2 — Challenge Assumptions (`ANALYZED`)
-- Evaluates **Problem Clarity** (`clear`, `incomplete`, `vague`) with explicit missing details enumerated.
-- Surfaces **Unverified Assumptions** with unique IDs (`ASM-1`, `ASM-2`), risk levels (`high`, `medium`, `low`), required evidence, and recommended next actions.
-- Identifies **Evidence Gaps**, **Alternative Explanations**, and **Existing Workarounds**.
+### Stage 2: Challenge Assumptions & Spot Blind Spots (`ANALYZED`)
+- Powered by Google Gemini (`gemini-flash-lite-latest`), the system analyzes the submission:
+  - Formulates a **Sharpened Problem Statement** removing solution bias.
+  - Scores **Problem Clarity** (`clear`, `incomplete`, `vague`) with explicit missing operational details.
+  - Generates **Unverified Assumptions** with unique IDs (`ASM-1`, `ASM-2`, etc.), assigned risk ratings (`high`, `medium`, `low`), and required evidence.
+  - Highlights the single **Highest-Risk Uncertainty** (the make-or-break pivot point).
+  - Identifies **Evidence Gaps**, **Alternative Explanations**, and **Existing Workarounds**.
 
-### Stage 3 — Design Validation Experiment (`TEST_DEFINED`)
-- Generates the smallest practical test that reduces the highest-risk uncertainty.
-- Formulates **Strictly Non-Leading Past-Behavior Inquiry Questions** (e.g., *"Tell me about the last time you experienced this. What tool or workaround did you use?"*).
-- Prohibits leading hypotheticals (*"Would you love an app that...?"*).
-- Specifies execution protocol, evidence checklist, supporting signals, weakening signals, and limitations.
+### Stage 3: Validation Experiment Design (`TEST_DEFINED`)
+- Generates a targeted, small-scale test protocol designed to test the highest-risk assumption with minimal effort.
+- Produces **Strictly Non-Leading Inquiry Questions** with one-click clipboard copying.
+- Outlines an execution protocol, target participant count, estimated effort (e.g. *90 min, $0*), observable evidence checklist, supporting signals, and weakening signals.
 
-### Stage 4 — Record Findings (`FINDINGS_ENTERED`)
-- Captures empirical observations categorized by source: `direct_observation`, `user_reported_experience`, `interpretation`, or `assumption`.
-- Maps findings to specific assumptions under evaluation.
-- Flags polite enthusiasm (*"Everyone loved this idea!"*) as subjective opinion lacking behavioral evidence.
+### Stage 4: Record Observed Findings (`FINDINGS_ENTERED`)
+- A structured data-collection ledger where founders log raw findings from user interactions.
+- Classifies each entry by source type (`direct_observation`, `user_reported`, `interpretation`, `assumption`) and links it to the specific assumption under test.
+- Includes heuristic nudges that detect polite praise (e.g., *"they loved the idea"*) and prompt founders for behavioral evidence.
+- Provides instant test injection presets (`+ Contradiction`, `+ Supporting Signal`, `+ Subjective Praise`) for demonstration.
 
-### Stage 5 — Review Evidence & Issue Grounded Verdict (`EVIDENCE_REVIEWED`)
-Synthesizes findings against claims and outputs **exactly one primary decision category**:
-1. **`INSUFFICIENT EVIDENCE`**: Available findings do not justify a conclusion (sample too small, purely subjective praise, or empty records).
-2. **`REVISE THE HYPOTHESIS`**: Findings demonstrate that users find existing workarounds satisfactory or that friction is negligible.
-3. **`EVIDENCE SUPPORTS FURTHER TESTING`**: Observations indicate genuine recurring friction justifying deeper investigation (does **not** guarantee market demand or product-market fit).
-
-> [!IMPORTANT]
-> **Responsible AI Principle:** ProblemPilot **never** outputs *"PROVEN"* or *"GUARANTEED MARKET DEMAND"*. A single observation never establishes universal truth.
+### Stage 5: Evidence Review & Grounded Decision Brief (`EVIDENCE_REVIEWED`)
+- Evaluates the ledger of findings and synthesizes an authoritative executive decision brief.
+- Delivers a primary verdict:
+  - `INSUFFICIENT EVIDENCE`: Findings are insufficient, empty, or purely polite enthusiasm.
+  - `REVISE THE HYPOTHESIS`: Evidence proves current workarounds are satisfactory or that the problem is negligible.
+  - `EVIDENCE SUPPORTS FURTHER TESTING`: Real behavioral friction is observed, warranting continued validation.
+- Provides a concrete **48-Hour Action Protocol** and one-click **Markdown Decision Brief Export**.
 
 ---
 
-## 4. State Transitions & Evidence Integrity
+## 4. Assumptions Made
 
-- **Strict Transition Guards:** Users cannot skip stages via URL or DOM manipulation. Stage 5 requires recorded empirical findings.
-- **Hypothesis Invalidation (Dirty State):** Modifying the problem statement after Stage 2 flags existing analyses and experiments as **outdated/stale** and requires re-analysis before a verdict can be synthesized.
-- **Non-Destructive Backwards Navigation:** Users can return to earlier stages at any time without destroying recorded findings or entered hypotheses.
-- **Safe Reset:** Confirmation modal prevents accidental data loss.
+In designing and architecting ProblemPilot, the following foundational assumptions were made:
+
+### Methodological & Epistemic Assumptions
+1. **Self-Reported Data Authenticity:** The platform assumes the founder truthfully logs user observations. The system evaluates the logical and epistemic validity of the recorded text, but cannot physically confirm external real-world interview recordings.
+2. **Small-Sample Boundary:** Initial validation experiments typically engage 5 to 10 target users. While 5 qualitative interviews uncover ~80% of usability and acute pain friction (Nielsen Norman Group), they do not constitute quantitative statistical market size. The tool explicitly assumes this limitation and never declares a market "proven".
+3. **Problem-First Primacy:** We assume that sustainable technology ventures are founded on genuine user friction rather than novel technologies searching for a use case. The state machine enforces defining the problem before pitching solutions.
+
+### Technical & Architectural Assumptions
+1. **Security Isolation:** API keys (`GEMINI_API_KEY`) must never touch client browsers. The architecture strictly routes all AI interactions through server-side endpoints (Vite Connect middleware in local development; Vercel Serverless Functions in cloud production).
+2. **Transparent Fallback & Zero Fabricated AI:** If an API key is missing or suspended, the system strictly refuses to fabricate live AI results. It falls back to deterministic heuristic evaluation with a clear, honest user alert.
+3. **Client-Side Persistence:** LocalStorage is assumed available in modern browsers for session state persistence. Corrupted JSON or schema version mismatches are gracefully caught and reset without application crashes.
+4. **Repository Standards:** The repository is maintained as a single branch (`main`), under 10 MB total footprint (currently ~830 KB), and public on GitHub per hackathon specifications.
 
 ---
 
@@ -89,10 +109,13 @@ Synthesizes findings against claims and outputs **exactly one primary decision c
 - **Toolchain**: Vite 8 (Dev server, HMR, production bundler)
 - **Styling**: Tailwind CSS v4 (`@tailwindcss/vite`) with an analytical, high-contrast dark palette (anti-slop, zero neon/rainbow AI gradients)
 - **Icons**: Lucide React
-- **AI Core**: Google Gemini API via official `@google/genai` SDK (`gemini-2.5-flash`)
-- **Server Architecture**: Vite Connect API Middleware (`/api/analyze`, `/api/test`, `/api/review`) keeping `GEMINI_API_KEY` strictly server-side
-- **Testing**: Vitest 5 (105 automated unit and contract tests)
-- **Local Persistence**: Versioned LocalStorage with schema validation
+- **AI Core**: Google Gemini API via official `@google/genai` SDK (`gemini-flash-lite-latest` / `gemini-2.5-flash`)
+- **Server Architecture**: Dual-target architecture:
+  - Local Dev: Vite Connect API Middleware (`/api/analyze`, `/api/test`, `/api/review`) keeping `GEMINI_API_KEY` strictly server-side
+  - Cloud Production: Vercel Serverless Functions (`api/analyze.ts`, `api/test.ts`, `api/review.ts` + `vercel.json`)
+- **Testing**: Vitest 5 (**311 automated unit, contract, and adversarial tests across 14 test suites with 100% pass rate**)
+- **Local Persistence**: Versioned LocalStorage with schema validation and corruption recovery
+- **Accessibility**: WCAG 2.1 AA compliant semantic HTML, full keyboard navigation, ARIA landmarks, `aria-expanded` dialogs, and minimum 44px ergonomic touch targets
 
 ---
 

@@ -84,6 +84,7 @@ export const StageProgressBar: FC<StageProgressBarProps> = ({
                 onClick={() => isClickable && onNavigate(stage)}
                 disabled={!isClickable && !isCurrent}
                 aria-current={isCurrent ? 'step' : undefined}
+                aria-label={`Switch to Stage ${info.step}: ${info.title}`}
                 title={
                   !isClickable && !isCurrent
                     ? check.reason || 'Complete previous steps before advancing.'

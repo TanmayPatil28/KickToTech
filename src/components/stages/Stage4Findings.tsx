@@ -143,6 +143,7 @@ export const Stage4Findings: FC<Stage4FindingsProps> = ({
                     'Direct counter-evidence: existing workaround fully satisfies user cohort.'
                   )
                 }
+                aria-label="Add contradiction quick finding observation"
                 className="px-2.5 py-1 min-h-[36px] rounded-lg bg-rose-500/15 border border-rose-500/30 hover:bg-rose-500/25 text-rose-300 text-xs font-medium transition-all duration-150 ease-out active:scale-[0.97] cursor-pointer"
               >
                 + Contradiction
@@ -157,6 +158,7 @@ export const Stage4Findings: FC<Stage4FindingsProps> = ({
                     'Timed session observation: verified schematics search bottleneck.'
                   )
                 }
+                aria-label="Add supporting signal quick finding observation"
                 className="px-2.5 py-1 min-h-[36px] rounded-lg bg-emerald-500/15 border border-emerald-500/30 hover:bg-emerald-500/25 text-emerald-300 text-xs font-medium transition-all duration-150 ease-out active:scale-[0.97] cursor-pointer"
               >
                 + Supporting Signal
@@ -171,6 +173,7 @@ export const Stage4Findings: FC<Stage4FindingsProps> = ({
                     'Hypothetical enthusiasm / polite praise without verified action.'
                   )
                 }
+                aria-label="Add subjective praise quick finding observation"
                 className="px-2.5 py-1 min-h-[36px] rounded-lg bg-amber-500/15 border border-amber-500/30 hover:bg-amber-500/25 text-amber-300 text-xs font-medium transition-all duration-150 ease-out active:scale-[0.97] cursor-pointer"
               >
                 + Subjective Praise
@@ -359,6 +362,7 @@ export const Stage4Findings: FC<Stage4FindingsProps> = ({
                     type="button"
                     onClick={() => onRemoveFinding(f.id)}
                     title="Delete observation"
+                    aria-label={`Delete finding observation #${idx + 1}`}
                     className="text-zinc-400 hover:text-rose-600 p-2 rounded-lg hover:bg-rose-50 transition-colors shrink-0 cursor-pointer active:scale-[0.97]"
                   >
                     <Trash2 className="w-4 h-4" />

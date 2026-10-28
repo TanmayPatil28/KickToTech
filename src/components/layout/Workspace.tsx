@@ -17,10 +17,13 @@ export const Workspace: FC<WorkspaceProps> = ({
   return (
     <div className={`max-w-7xl mx-auto w-full px-3 sm:px-4 lg:px-8 py-4 sm:py-6 flex-1 flex flex-col ${className}`}>
       {/* Mobile Tab Switcher (< 1024px) */}
-      <div className="flex lg:hidden mb-5 p-1 rounded-xl bg-zinc-100 border border-zinc-200/90 text-xs font-medium shadow-2xs">
+      <div role="tablist" aria-label="Mobile workspace view tabs" className="flex lg:hidden mb-5 p-1 rounded-xl bg-zinc-100 border border-zinc-200/90 text-xs font-medium shadow-2xs">
         <button
           type="button"
           onClick={() => setMobileTab('task')}
+          role="tab"
+          aria-selected={mobileTab === 'task'}
+          aria-label="Active Stage Task"
           className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-2 py-2.5 min-h-[44px] rounded-lg transition-all duration-150 ease-out active:scale-[0.97] select-none text-[11px] sm:text-xs ${
             mobileTab === 'task'
               ? 'bg-white text-zinc-950 font-semibold shadow-xs'
@@ -34,6 +37,9 @@ export const Workspace: FC<WorkspaceProps> = ({
         <button
           type="button"
           onClick={() => setMobileTab('context')}
+          role="tab"
+          aria-selected={mobileTab === 'context'}
+          aria-label="Hypothesis and Evidence Context"
           className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-2 py-2.5 min-h-[44px] rounded-lg transition-all duration-150 ease-out active:scale-[0.97] select-none text-[11px] sm:text-xs ${
             mobileTab === 'context'
               ? 'bg-white text-zinc-950 font-semibold shadow-xs'
