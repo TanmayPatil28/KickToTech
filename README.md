@@ -168,7 +168,7 @@ ProblemPilot includes a deterministic, offline-capable Demo Mode accessible from
 
 ---
 
-## 9. Automated Test Suite (105 Tests)
+## 9. Automated Test Suite (311 Tests)
 
 Run the full automated test suite:
 ```bash
