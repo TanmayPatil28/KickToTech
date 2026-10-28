@@ -75,8 +75,8 @@ Every requirement and discovered feature mapped directly to a milestone:
 
 | # | Name | Scope | Dependencies | Status |
 |---|------|-------|-------------|--------|
-| M1 | Core Domain Schemas, State Machine & Store | `src/types/index.ts`, `src/store/stateMachine.ts`, transition guards, dirty state detection, localStorage sync | none | IN_PROGRESS |
-| M2 | Server API Middleware & Gemini AI Service | `server/apiMiddleware.ts`, `server/geminiService.ts`, `server/demoData.ts`, `vite.config.ts`, error handling | M1 | PLANNED |
+| M1 | Core Domain Schemas, State Machine & Store | `src/types/index.ts`, `src/store/stateMachine.ts`, transition guards, dirty state detection, localStorage sync | none | DONE |
+| M2 | Server API Middleware & Gemini AI Service | `server/apiMiddleware.ts`, `server/geminiService.ts`, `server/demoData.ts`, `vite.config.ts`, error handling | M1 | IN_PROGRESS |
 | M3 | Analytical Workspace & 5-Stage Form Views | `src/components/*`, two-column layout, Stage 1-5 views, Evidence Ledger, tactile buttons, mobile responsiveness | M1, M2 | PLANNED |
 | M4 | Demo Mode Controls, Warnings & Documentation | Demo banner, scenario switchers, reset modal, README.md, build verification | M3 | PLANNED |
 | M5 | 100% E2E Test Pass & Adversarial Hardening | Verify all 14 PRD scenarios (Tiers 1-4) and Tier 5 adversarial stress testing | M4, TEST_READY | PLANNED |

@@ -1,7 +1,7 @@
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vite';
-import { problemPilotApiPlugin } from './src/server/apiMiddleware.ts';
+import { problemPilotApiPlugin } from './server/apiMiddleware.ts';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -11,6 +11,9 @@ export default defineConfig({
     problemPilotApiPlugin(),
   ],
   server: {
+    port: 5173,
+  },
+  preview: {
     port: 5173,
   },
 });
