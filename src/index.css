@@ -30,6 +30,11 @@ body {
   min-height: 100dvh;
 }
 
+/* Restrained transitions under 300ms using ease-out (anti-slop rule) */
+button, input, textarea, select {
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1); /* ease-out */
+}
+
 /* Custom crisp scrollbars */
 ::-webkit-scrollbar {
   width: 6px;

@@ -1,15 +1,18 @@
 import { useState } from 'react';
 import { useEvidenceStore } from './store/evidenceStore.ts';
-import { Header } from './components/Header.tsx';
-import { StageProgressBar } from './components/StageProgressBar.tsx';
-import { ProblemInputForm } from './components/ProblemInputForm.tsx';
-import { AssumptionCritiquePanel } from './components/AssumptionCritiquePanel.tsx';
-import { ValidationExperimentPanel } from './components/ValidationExperimentPanel.tsx';
-import { FindingEntryForm } from './components/FindingEntryForm.tsx';
-import { VerdictPanel } from './components/VerdictPanel.tsx';
+import { Header } from './components/layout/Header.tsx';
+import { StageProgressBar } from './components/layout/StageProgressBar.tsx';
+import { Workspace } from './components/layout/Workspace.tsx';
+import { OutdatedBanner } from './components/common/OutdatedBanner.tsx';
+import { Stage1Define } from './components/stages/Stage1Define.tsx';
+import { Stage2Assumptions } from './components/stages/Stage2Assumptions.tsx';
+import { Stage3Experiment } from './components/stages/Stage3Experiment.tsx';
+import { Stage4Findings } from './components/stages/Stage4Findings.tsx';
+import { Stage5Verdict } from './components/stages/Stage5Verdict.tsx';
 import { SecondaryColumn } from './components/SecondaryColumn.tsx';
 import { AlertCircle, X } from 'lucide-react';
 import type { ProblemInput } from './types/index.ts';
+import { api } from './services/api.ts';
 
 export function App() {
   const {
@@ -25,10 +28,14 @@ export function App() {
     navigateTo,
     loadDemoScenario,
     resetCase,
+    canTransitionTo,
   } = useEvidenceStore();
 
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
+
+  const isDirty = Boolean(state.isDirty || state.isProblemStale);
+  const currentStage = state.stage || state.currentStage || 'DRAFT';
 
   // Stage 1 -> 2: Analyze Problem
   const handleAnalyzeProblem = async (problemData: ProblemInput) => {
@@ -37,19 +44,14 @@ export function App() {
     updateProblem(problemData);
 
     try {
-      const response = await fetch('/api/analyze', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          problem: problemData,
-          isDemo: state.isDemoMode,
-          demoScenario: state.demoScenarioId,
-        }),
+      const res = await api.analyzeProblem({
+        problem: problemData,
+        isDemo: state.isDemoMode || state.isDemo,
+        demoScenario: (state.demoScenarioId as any) || (state.demoScenario as any),
       });
 
-      const res = await response.json();
-      if (!res.success) {
-        throw new Error(res.error || 'Failed to analyze problem.');
+      if (!res.success || !res.data) {
+        throw new Error(res.error || 'Failed to analyze problem statement.');
       }
 
       setAnalysis(res.data);
@@ -68,29 +70,30 @@ export function App() {
       return;
     }
 
+    if (!state.analysis) return;
+
     setIsLoading(true);
     setApiError(null);
 
     try {
-      const response = await fetch('/api/test', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          problem: state.problem,
-          analysis: state.analysis,
-          isDemo: state.isDemoMode,
-        }),
+      const res = await api.generateTest({
+        problem: state.problem,
+        analysis: state.analysis,
+        assumptions: state.analysis.assumptions,
+        isDemo: state.isDemoMode || state.isDemo,
+        demoScenario: (state.demoScenarioId as any) || (state.demoScenario as any),
       });
 
-      const res = await response.json();
-      if (!res.success) {
-        throw new Error(res.error || 'Failed to generate validation experiment.');
+      if (!res.success || !res.data) {
+        throw new Error(res.error || 'Failed to design validation experiment.');
       }
 
-      setExperiment(res.data.primary);
+      const exp = (res.data as any).primary || res.data;
+      setExperiment(exp);
+      navigateTo('TEST_DEFINED');
     } catch (err: any) {
       console.error('Test generation error:', err);
-      setApiError(err.message || 'Failed to generate experiment.');
+      setApiError(err.message || 'Failed to generate experiment design.');
     } finally {
       setIsLoading(false);
     }
@@ -98,56 +101,58 @@ export function App() {
 
   // Stage 4 -> 5: Submit Findings for Verdict
   const handleSubmitFindingsForReview = async () => {
-    if (!state.analysis || !state.experiment) return;
+    if (!state.analysis && !state.experiment) return;
 
     setIsLoading(true);
     setApiError(null);
 
     try {
-      const response = await fetch('/api/review', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          problem: state.problem,
-          analysis: state.analysis,
-          experiment: state.experiment,
-          findings: state.findings,
-          isDemo: state.isDemoMode,
-        }),
+      const res = await api.reviewEvidence({
+        problem: state.problem,
+        hypothesis: state.experiment?.hypothesis || state.analysis?.assumptions[0]?.claim,
+        analysis: state.analysis || undefined,
+        experiment: state.experiment || undefined,
+        findings: state.findings,
+        isDemo: state.isDemoMode || state.isDemo,
+        demoScenario: (state.demoScenarioId as any) || (state.demoScenario as any),
       });
 
-      const res = await response.json();
-      if (!res.success) {
-        throw new Error(res.error || 'Failed to review findings.');
+      if (!res.success || !res.data) {
+        throw new Error(res.error || 'Failed to review evidence findings.');
       }
 
-      setVerdict(res.data);
+      setVerdict(res.data as any);
+      navigateTo('EVIDENCE_REVIEWED');
     } catch (err: any) {
-      console.error('Review error:', err);
-      setApiError(err.message || 'Evidence review failed.');
+      console.error('Evidence review error:', err);
+      setApiError(err.message || 'Evidence review synthesis failed.');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#0b0d13] text-slate-100 flex flex-col font-sans">
-      {/* Header */}
+    <div className="min-h-[100dvh] bg-[#0b0d13] text-slate-100 flex flex-col font-sans selection:bg-blue-600/30 selection:text-blue-200">
+      {/* Top Header */}
       <Header
-        currentStage={state.stage}
-        isDemoMode={state.isDemoMode}
-        demoScenarioId={state.demoScenarioId}
+        currentStage={currentStage}
+        isDemoMode={Boolean(state.isDemoMode || state.isDemo)}
+        demoScenarioId={state.demoScenarioId || state.demoScenario}
         onSelectScenario={loadDemoScenario}
         onReset={resetCase}
       />
 
-      {/* Workflow Stage Progress Stepper */}
-      <StageProgressBar currentStage={state.stage} onNavigate={navigateTo} />
+      {/* 5-Stage Stepper Navigation */}
+      <StageProgressBar
+        currentStage={currentStage}
+        onNavigate={navigateTo}
+        canNavigateTo={canTransitionTo}
+      />
 
       {/* Global Alerts / Errors */}
       {(transitionError || apiError) && (
         <div className="max-w-7xl mx-auto w-full px-4 lg:px-8 mt-4">
-          <div className="p-3.5 rounded-lg bg-rose-950/60 border border-rose-800/80 text-rose-200 text-xs flex items-center justify-between gap-3 shadow-lg">
+          <div className="p-3.5 rounded-xl bg-rose-950/60 border border-rose-800/80 text-rose-200 text-xs flex items-center justify-between gap-3 shadow-lg">
             <div className="flex items-center gap-2">
               <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
               <span>{transitionError || apiError}</span>
@@ -158,7 +163,7 @@ export function App() {
                 clearTransitionError();
                 setApiError(null);
               }}
-              className="text-rose-400 hover:text-rose-200 p-0.5 rounded"
+              className="text-rose-400 hover:text-rose-200 p-1 rounded transition-colors"
             >
               <X className="w-4 h-4" />
             </button>
@@ -166,87 +171,93 @@ export function App() {
         </div>
       )}
 
-      {/* Main Workspace Layout */}
-      <main className="max-w-7xl mx-auto w-full px-4 lg:px-8 py-6 flex-1">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          {/* Main Stage Form Column */}
-          <section className="lg:col-span-8 space-y-6">
-            {state.stage === 'DRAFT' && (
-              <ProblemInputForm
+      {/* Prominent Dirty State Warning Banner (When problem changed post-analysis & not on Stage 1) */}
+      {isDirty && currentStage !== 'DRAFT' && (
+        <div className="max-w-7xl mx-auto w-full px-4 lg:px-8 mt-4">
+          <OutdatedBanner
+            onReanalyze={() => {
+              navigateTo('DRAFT');
+            }}
+          />
+        </div>
+      )}
+
+      {/* Two-Column Responsive Analytical Workspace */}
+      <Workspace
+        mainContent={
+          <>
+            {/* Stage 1: Define Problem */}
+            {currentStage === 'DRAFT' && (
+              <Stage1Define
                 initialProblem={state.problem}
                 onSubmit={handleAnalyzeProblem}
                 isLoading={isLoading}
               />
             )}
 
-            {state.stage === 'ANALYZED' && state.analysis && (
-              <AssumptionCritiquePanel
+            {/* Stage 2: Challenge Assumptions */}
+            {currentStage === 'ANALYZED' && state.analysis && (
+              <Stage2Assumptions
                 problem={state.problem}
                 analysis={state.analysis}
                 onProceedToTest={handleProceedToTest}
                 onEditProblem={() => navigateTo('DRAFT')}
-                isProblemStale={state.isProblemStale}
+                isDirty={isDirty}
+                isLoading={isLoading}
               />
             )}
 
-            {state.stage === 'TEST_DEFINED' && state.experiment && (
-              <div className="space-y-6">
-                <ValidationExperimentPanel
-                  experiment={state.experiment}
-                  onProceedToFindings={() => {
-                    const el = document.getElementById('findings-entry-anchor');
-                    el?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                  onBackToAnalysis={() => navigateTo('ANALYZED')}
-                />
-                <div id="findings-entry-anchor">
-                  <FindingEntryForm
-                    assumptions={state.analysis?.assumptions || []}
-                    findings={state.findings}
-                    onAddFinding={addFinding}
-                    onRemoveFinding={removeFinding}
-                    onSubmitForReview={handleSubmitFindingsForReview}
-                    onBackToExperiment={() => navigateTo('ANALYZED')}
-                    isLoading={isLoading}
-                  />
-                </div>
-              </div>
+            {/* Stage 3: Validation Experiment Design */}
+            {currentStage === 'TEST_DEFINED' && state.experiment && (
+              <Stage3Experiment
+                experiment={state.experiment}
+                onProceedToFindings={() => navigateTo('FINDINGS_ENTERED')}
+                onBackToAnalysis={() => navigateTo('ANALYZED')}
+                onReanalyze={() => navigateTo('DRAFT')}
+                isDirty={isDirty}
+              />
             )}
 
-            {state.stage === 'FINDINGS_ENTERED' && state.analysis && (
-              <FindingEntryForm
-                assumptions={state.analysis.assumptions}
+            {/* Stage 4: Record Findings */}
+            {currentStage === 'FINDINGS_ENTERED' && (
+              <Stage4Findings
+                assumptions={state.analysis?.assumptions || []}
                 findings={state.findings}
                 onAddFinding={addFinding}
                 onRemoveFinding={removeFinding}
                 onSubmitForReview={handleSubmitFindingsForReview}
                 onBackToExperiment={() => navigateTo('TEST_DEFINED')}
+                onReanalyze={() => navigateTo('DRAFT')}
+                isDirty={isDirty}
                 isLoading={isLoading}
               />
             )}
 
-            {state.stage === 'EVIDENCE_REVIEWED' && state.verdict && (
-              <VerdictPanel
+            {/* Stage 5: Decision Brief & Verdict */}
+            {currentStage === 'EVIDENCE_REVIEWED' && (state.verdict || state.decisionBrief) && (
+              <Stage5Verdict
+                decisionBrief={state.decisionBrief}
                 verdict={state.verdict}
                 onRefineHypothesis={() => navigateTo('DRAFT')}
                 onBackToFindings={() => navigateTo('FINDINGS_ENTERED')}
+                onReanalyze={() => navigateTo('DRAFT')}
+                isDirty={isDirty}
               />
             )}
-          </section>
+          </>
+        }
+        sidebarContent={
+          <SecondaryColumn
+            state={state}
+            onReanalyze={() => navigateTo('DRAFT')}
+            onRemoveFinding={removeFinding}
+          />
+        }
+      />
 
-          {/* Secondary Analytical Column */}
-          <section className="lg:col-span-4">
-            <SecondaryColumn
-              state={state}
-              onReanalyze={() => navigateTo('DRAFT')}
-            />
-          </section>
-        </div>
-      </main>
-
-      {/* Compact Analytical Footer */}
+      {/* Modern Analytical Footer */}
       <footer className="border-t border-[#242a3e] bg-[#0b0d13] py-4 px-4 text-center text-xs text-slate-500 font-mono">
-        ProblemPilot — The Evidence Challenge &bull; PromptWars &times; KickToTech 2026 &bull; Strict Evidence-Grounded Product Validation
+        ProblemPilot &bull; The Evidence Challenge &bull; Epistemic Integrity Validation Engine &bull; PromptWars &times; KickToTech
       </footer>
     </div>
   );
