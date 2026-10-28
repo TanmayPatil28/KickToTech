@@ -251,13 +251,44 @@ export interface RetryOptions {
   timeoutMs?: number;
 }
 
+import fs from 'node:fs';
+import path from 'node:path';
+
+function getApiKey(): string | undefined {
+  try {
+    const envPath = path.resolve(process.cwd(), '.env');
+    if (fs.existsSync(envPath)) {
+      const content = fs.readFileSync(envPath, 'utf8');
+      const match = content.match(/^GEMINI_API_KEY\s*=\s*([^\r\n]+)/m);
+      if (match && match[1]) {
+        return match[1].trim().replace(/^["']|["']$/g, '');
+      }
+    }
+  } catch {}
+  return process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
+}
+
+function getModel(): string {
+  try {
+    const envPath = path.resolve(process.cwd(), '.env');
+    if (fs.existsSync(envPath)) {
+      const content = fs.readFileSync(envPath, 'utf8');
+      const match = content.match(/^GEMINI_MODEL\s*=\s*([^\r\n]+)/m);
+      if (match && match[1]) {
+        return match[1].trim().replace(/^["']|["']$/g, '');
+      }
+    }
+  } catch {}
+  return process.env.GEMINI_MODEL || 'gemini-3.5-flash';
+}
+
 export async function callGeminiWithSchema<T>(
   prompt: string,
   schema: any,
   validator: (data: unknown) => { valid: boolean; errors?: string[] },
   options: RetryOptions = {}
 ): Promise<T> {
-  const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
+  const apiKey = getApiKey();
   if (!apiKey || apiKey.trim().length === 0) {
     throw new MissingApiKeyError('GEMINI_API_KEY is not configured on the server.');
   }
@@ -271,8 +302,9 @@ export async function callGeminiWithSchema<T>(
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
+      const model = getModel();
       const generatePromise = ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model,
         contents: currentPrompt,
         config: {
           responseMimeType: 'application/json',
