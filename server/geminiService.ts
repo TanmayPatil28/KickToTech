@@ -293,7 +293,7 @@ export function sanitizeErrorMessage(msg: string): string {
   if (!msg) return 'AI service error';
   // Redact any Google API key pattern
   let sanitized = msg.replace(/AIza[0-9A-Za-z\-_]{35}/g, '[REDACTED_KEY]');
-  sanitized = sanitized.replace(/api_key:[a-zA-Z0-9_\-]+/g, 'api_key:[REDACTED]');
+  sanitized = sanitized.replace(/api_key:[a-zA-Z0-9_-]+/g, 'api_key:[REDACTED]');
 
   if (sanitized.includes('CONSUMER_SUSPENDED') || sanitized.includes('has been suspended')) {
     return 'Your Gemini API key has been suspended by Google Cloud (403 PERMISSION_DENIED: CONSUMER_SUSPENDED). Please generate a fresh key in Google AI Studio or switch to Demo Mode.';

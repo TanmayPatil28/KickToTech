@@ -20,6 +20,20 @@ export interface ApiMiddlewareOptions {
 }
 
 function parseJsonBody<T = any>(req: IncomingMessage): Promise<T> {
+  const existingBody = (req as any).body;
+  if (existingBody !== undefined && existingBody !== null) {
+    if (typeof existingBody === 'object') {
+      return Promise.resolve(existingBody as T);
+    }
+    if (typeof existingBody === 'string') {
+      try {
+        return Promise.resolve(existingBody ? JSON.parse(existingBody) : ({} as T));
+      } catch {
+        return Promise.reject(new Error('Malformed JSON payload'));
+      }
+    }
+  }
+
   return new Promise((resolve, reject) => {
     let body = '';
     req.on('data', (chunk) => {
@@ -40,8 +54,15 @@ function parseJsonBody<T = any>(req: IncomingMessage): Promise<T> {
 }
 
 function sendJson(res: ServerResponse, statusCode: number, data: unknown) {
+  if (typeof (res as any).status === 'function' && typeof (res as any).json === 'function') {
+    (res as any).setHeader?.('Content-Type', 'application/json');
+    (res as any).setHeader?.('Access-Control-Allow-Origin', '*');
+    (res as any).status(statusCode).json(data);
+    return;
+  }
   res.statusCode = statusCode;
   res.setHeader('Content-Type', 'application/json');
+  res.setHeader('Access-Control-Allow-Origin', '*');
   res.end(JSON.stringify(data));
 }
 
