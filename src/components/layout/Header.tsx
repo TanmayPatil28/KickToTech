@@ -42,7 +42,7 @@ export const Header: FC<HeaderProps> = ({
                 ProblemPilot
               </span>
               <span className="hidden sm:inline-flex text-[10px] uppercase font-mono tracking-wider px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-600 border border-zinc-200/80 font-medium">
-                The Evidence Challenge
+                Idea Validation Workspace
               </span>
             </div>
           </div>
@@ -140,7 +140,7 @@ export const Header: FC<HeaderProps> = ({
                   SAMPLE SCENARIO — NOT REAL RESEARCH
                 </span>
                 <span className="hidden md:inline text-amber-800/80 text-[11px]">
-                  (Deterministic mock data illustrating evidence-evaluation mechanics)
+                  (Sample practice case showing how real testing works)
                 </span>
               </div>
               <button
@@ -176,7 +176,7 @@ export const Header: FC<HeaderProps> = ({
             </div>
 
             <p className="text-sm text-zinc-600 leading-relaxed font-sans">
-              This action will reset your entered problem statement, analysis critique, validation experiments, and recorded findings ledger. Unsaved evidence will be permanently cleared.
+              This will start a fresh case and clear all your current problem notes, assumptions, and recorded findings.
             </p>
 
             <div className="flex items-center justify-end gap-3 pt-3 border-t border-zinc-100">

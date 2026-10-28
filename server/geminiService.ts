@@ -286,7 +286,7 @@ function getModel(): string {
       }
     }
   } catch {}
-  return process.env.GEMINI_MODEL || 'gemini-3.5-flash';
+  return process.env.GEMINI_MODEL || 'gemini-flash-lite-latest';
 }
 
 export function sanitizeErrorMessage(msg: string): string {

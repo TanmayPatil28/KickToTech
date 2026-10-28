@@ -53,6 +53,10 @@ export const Stage2Assumptions: FC<Stage2AssumptionsProps> = ({
     analysis?.assumptions?.find((a) => (a.riskLevel || a.risk) === 'high') ||
     analysis?.assumptions?.[0];
 
+  const remainingAssumptions = fatalAssumption
+    ? analysis?.assumptions?.filter((a) => a.id !== fatalAssumption.id) || []
+    : analysis?.assumptions || [];
+
   return (
     <div className={`space-y-6 animate-stage-enter ${className}`}>
       {/* Dirty Outdated Banner */}
@@ -67,13 +71,13 @@ export const Stage2Assumptions: FC<Stage2AssumptionsProps> = ({
           <div>
             <div className="flex items-center gap-2 text-teal-400 text-xs font-mono uppercase tracking-wider mb-1.5 font-semibold">
               <ShieldAlert className="w-4 h-4" />
-              <span>Stage 2: Challenge Assumptions & Epistemic Gaps</span>
+              <span>Stage 2: Challenge Assumptions & Spot Blind Spots</span>
             </div>
             <h2 className="text-xl font-semibold text-slate-100 tracking-tight">
-              Analytical Critique & Stress Test
+              Stress-Test Your Idea
             </h2>
             <p className="text-sm text-slate-400 mt-1 leading-relaxed">
-              Isolating what you believe from what has been observed. Highlighted below are the unverified claims that could invalidate your hypothesis.
+              Separate what you know for sure from what you are just guessing. Below are the hidden assumptions that could break your business idea if they turn out to be false.
             </p>
           </div>
 
@@ -91,7 +95,7 @@ export const Stage2Assumptions: FC<Stage2AssumptionsProps> = ({
         <div className="p-4 sm:p-5 rounded-xl bg-[#0c0f19] border border-[#1d243b] space-y-3">
           <div className="flex items-center gap-2 text-xs font-mono uppercase text-slate-400 tracking-wider font-semibold">
             <Target className="w-3.5 h-3.5 text-teal-400" />
-            <span>Problem Clarity Critique</span>
+            <span>How Clear Is Your Idea? (Problem Clarity Check)</span>
           </div>
           <p className="text-sm text-slate-200 leading-relaxed font-sans">
             {clarity.explanation}
@@ -99,9 +103,12 @@ export const Stage2Assumptions: FC<Stage2AssumptionsProps> = ({
 
           {clarity.missingDetails && clarity.missingDetails.length > 0 && (
             <div className="pt-3 border-t border-[#1d243b]">
-              <span className="text-xs font-mono uppercase text-amber-400 block mb-1.5 font-semibold">
+              <span className="text-xs font-mono uppercase text-amber-400 block mb-1 font-semibold">
                 Missing Specificity to Address:
               </span>
+              <p className="text-xs text-slate-400 mb-2 font-sans">
+                Key questions your idea still needs to answer before you start building:
+              </p>
               <ul className="list-disc list-inside space-y-1 text-xs text-slate-300">
                 {clarity.missingDetails.map((detail, idx) => (
                   <li key={idx} className="leading-snug">
@@ -117,26 +124,26 @@ export const Stage2Assumptions: FC<Stage2AssumptionsProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="p-4 sm:p-5 rounded-xl bg-[#0c0f19] border border-[#1d243b] space-y-2">
             <span className="text-[11px] font-mono uppercase text-slate-500 tracking-wider block font-semibold">
-              Original Submission:
+              What You Entered (Original Submission):
             </span>
             <p className="text-sm text-slate-300 italic leading-relaxed">
               "{problem.idea}"
             </p>
             <div className="text-[11px] text-slate-500 pt-1.5 border-t border-[#1d243b]">
-              Target Cohort: <span className="text-slate-200 font-medium">{problem.targetUser}</span>
+              Target Audience: <span className="text-slate-200 font-medium">{problem.targetUser}</span>
             </div>
           </div>
 
           <div className="p-4 sm:p-5 rounded-xl bg-teal-50/70 border border-teal-200 space-y-2 shadow-2xs">
             <div className="flex items-center gap-1.5 text-teal-800 text-[11px] font-mono uppercase tracking-wider font-semibold">
               <Sparkles className="w-3.5 h-3.5 text-teal-700" />
-              <span>Sharpened Problem Formulation:</span>
+              <span>A Clearer Way to Say It (Sharpened Problem Formulation):</span>
             </div>
             <p className="text-sm text-teal-950 font-semibold leading-relaxed font-sans">
               "{analysis.refinedProblemStatement}"
             </p>
             <div className="text-[11px] text-teal-800 pt-1.5 border-t border-teal-200/60 font-sans">
-              User Ambiguity: <span className="font-semibold text-teal-950">{analysis.targetUserAmbiguity}</span>
+              Audience Scope: <span className="font-semibold text-teal-950">{analysis.targetUserAmbiguity}</span>
             </div>
           </div>
         </div>
@@ -147,7 +154,7 @@ export const Stage2Assumptions: FC<Stage2AssumptionsProps> = ({
             <div className="flex items-center gap-2">
               <Flame className="w-4 h-4 text-rose-600 shrink-0" />
               <span className="text-xs font-mono uppercase tracking-wider text-rose-800 block font-bold">
-                Highest-Risk Uncertainty
+                Highest-Risk Uncertainty (Your #1 Make-or-Break Question)
               </span>
             </div>
             <p className="text-sm leading-relaxed text-rose-950 font-medium font-sans">
@@ -166,7 +173,7 @@ export const Stage2Assumptions: FC<Stage2AssumptionsProps> = ({
               </span>
             </h3>
             <span className="text-xs text-slate-400 hidden sm:inline font-sans">
-              Require empirical behavioral evidence
+              Things you are guessing that need real customer proof
             </span>
           </div>
 
@@ -222,70 +229,77 @@ export const Stage2Assumptions: FC<Stage2AssumptionsProps> = ({
             </div>
           )}
 
-          {/* Remaining Assumptions Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {analysis.assumptions.map((asm) => {
-              const risk = asm.riskLevel || asm.risk || 'medium';
-              const nextAction = asm.recommendedNextAction || asm.nextAction;
-              const reason = asm.whyItMatters || asm.reason;
+          {/* Remaining Assumptions Grid (only unhighlighted ones to avoid duplicates) */}
+          {remainingAssumptions.length > 0 && (
+            <div className="space-y-3 pt-2">
+              <h4 className="text-xs font-semibold text-zinc-700 uppercase tracking-wider font-mono">
+                Other Key Assumptions ({remainingAssumptions.length})
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {remainingAssumptions.map((asm) => {
+                  const risk = asm.riskLevel || asm.risk || 'medium';
+                  const nextAction = asm.recommendedNextAction || asm.nextAction;
+                  const reason = asm.whyItMatters || asm.reason;
 
-              return (
-                <div
-                  key={asm.id}
-                  className="p-5 rounded-xl bg-white border border-zinc-200/90 flex flex-col justify-between hover:border-zinc-300 transition-colors gap-3.5 shadow-premium-card"
-                >
-                  <div className="space-y-2.5">
-                    {/* Header Badges */}
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="font-mono text-xs font-semibold px-2 py-0.5 rounded bg-zinc-100 text-zinc-800 border border-zinc-200">
-                        {asm.id}
-                      </span>
-                      <div className="flex items-center gap-1.5">
-                        <Badge variant="risk" risk={risk} />
-                        <Badge variant="status" status={asm.status} />
+                  return (
+                    <div
+                      key={asm.id}
+                      className="p-5 rounded-xl bg-white border border-zinc-200/90 flex flex-col justify-between hover:border-zinc-300 transition-colors gap-3.5 shadow-premium-card"
+                    >
+                      <div className="space-y-2.5">
+                        {/* Header Badges */}
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="font-mono text-xs font-semibold px-2 py-0.5 rounded bg-zinc-100 text-zinc-800 border border-zinc-200">
+                            {asm.id}
+                          </span>
+                          <div className="flex items-center gap-1.5">
+                            <Badge variant="risk" risk={risk} />
+                            <Badge variant="status" status={asm.status} />
+                          </div>
+                        </div>
+
+                        {/* Claim */}
+                        <p className="text-sm font-semibold text-zinc-950 leading-snug font-sans">
+                          "{asm.claim}"
+                        </p>
+
+                        {/* Why It Matters */}
+                        {reason && (
+                          <p className="text-xs text-zinc-600 leading-relaxed font-sans">
+                            <strong className="text-zinc-900 font-medium">Why it matters:</strong> {reason}
+                          </p>
+                        )}
+
+                        {/* Evidence Needed */}
+                        {asm.evidenceNeeded && asm.evidenceNeeded.length > 0 && (
+                          <div className="bg-zinc-50 p-2.5 rounded-lg border border-zinc-200 space-y-1">
+                            <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block font-semibold">
+                              Evidence Required:
+                            </span>
+                            <ul className="list-disc list-inside space-y-0.5 text-xs text-zinc-700">
+                              {asm.evidenceNeeded.map((ev, i) => (
+                                <li key={i}>{ev}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
                       </div>
+
+                      {/* Recommended Action */}
+                      {nextAction && (
+                        <div className="pt-2.5 border-t border-zinc-100 flex items-center gap-1.5 text-xs text-teal-800">
+                          <ArrowRight className="w-3.5 h-3.5 shrink-0 text-teal-700" />
+                          <span className="truncate">
+                            <strong className="text-teal-900">Action:</strong> {nextAction}
+                          </span>
+                        </div>
+                      )}
                     </div>
-
-                    {/* Claim */}
-                    <p className="text-sm font-semibold text-zinc-950 leading-snug font-sans">
-                      "{asm.claim}"
-                    </p>
-
-                    {/* Why It Matters */}
-                    {reason && (
-                      <p className="text-xs text-zinc-600 leading-relaxed font-sans">
-                        <strong className="text-zinc-900 font-medium">Why it matters:</strong> {reason}
-                      </p>
-                    )}
-
-                    {/* Evidence Needed */}
-                    {asm.evidenceNeeded && asm.evidenceNeeded.length > 0 && (
-                      <div className="bg-zinc-50 p-2.5 rounded-lg border border-zinc-200 space-y-1">
-                        <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block font-semibold">
-                          Evidence Required:
-                        </span>
-                        <ul className="list-disc list-inside space-y-0.5 text-xs text-zinc-700">
-                          {asm.evidenceNeeded.map((ev, i) => (
-                            <li key={i}>{ev}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Recommended Action */}
-                  {nextAction && (
-                    <div className="pt-2.5 border-t border-zinc-100 flex items-center gap-1.5 text-xs text-teal-800">
-                      <ArrowRight className="w-3.5 h-3.5 shrink-0 text-teal-700" />
-                      <span className="truncate">
-                        <strong className="text-teal-900">Action:</strong> {nextAction}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Evidence Gaps & Alternative Explanations Grid */}
@@ -294,7 +308,7 @@ export const Stage2Assumptions: FC<Stage2AssumptionsProps> = ({
           <div className="space-y-3">
             <h3 className="text-sm font-semibold text-zinc-900 flex items-center gap-2">
               <HelpCircle className="w-4 h-4 text-amber-600" />
-              <span>Critical Evidence Gaps ({analysis.evidenceGaps?.length || 0})</span>
+              <span>Critical Evidence Gaps ({analysis.evidenceGaps?.length || 0}) — What You Still Don't Know</span>
             </h3>
             <div className="space-y-2.5">
               {analysis.evidenceGaps?.map((gap, i) => (
@@ -320,7 +334,7 @@ export const Stage2Assumptions: FC<Stage2AssumptionsProps> = ({
             <div className="bg-white border border-zinc-200/90 rounded-xl p-4 sm:p-5 space-y-2 shadow-2xs">
               <div className="flex items-center gap-2 text-xs font-mono uppercase text-purple-800">
                 <GitBranch className="w-4 h-4 text-purple-600" />
-                <span className="font-semibold">Alternative Explanations</span>
+                <span className="font-semibold">Alternative Explanations (Other Reasons for This Problem)</span>
               </div>
               <ul className="list-disc list-inside space-y-1 text-xs text-zinc-700 font-sans">
                 {analysis.alternativeExplanations?.map((alt, i) => (
@@ -332,7 +346,7 @@ export const Stage2Assumptions: FC<Stage2AssumptionsProps> = ({
             <div className="bg-white border border-zinc-200/90 rounded-xl p-4 sm:p-5 space-y-2 shadow-2xs">
               <div className="flex items-center gap-2 text-xs font-mono uppercase text-teal-800">
                 <Wrench className="w-4 h-4 text-teal-600" />
-                <span className="font-semibold">Current Workarounds & Substitutes</span>
+                <span className="font-semibold">Current Workarounds & Substitutes (What People Use Today)</span>
               </div>
               <ul className="list-disc list-inside space-y-1 text-xs text-zinc-700 font-sans">
                 {analysis.existingWorkarounds?.map((w, i) => (
