@@ -30,63 +30,63 @@ export const Badge: FC<BadgeProps> = ({
   icon,
   className = '',
 }) => {
-  let colorClasses = 'bg-[#181c2a] text-slate-300 border-[#242a3e]';
+  let colorClasses = 'bg-slate-100 text-slate-700 border-slate-200';
   let displayLabel = label || '';
 
   if (variant === 'risk' && risk) {
     displayLabel = displayLabel || `${risk.toUpperCase()} RISK`;
     if (risk === 'high') {
-      colorClasses = 'bg-rose-950/50 text-rose-300 border-rose-800/60';
+      colorClasses = 'bg-rose-50 text-rose-700 border-rose-200';
     } else if (risk === 'medium') {
-      colorClasses = 'bg-amber-950/50 text-amber-300 border-amber-800/60';
+      colorClasses = 'bg-amber-50 text-amber-700 border-amber-200';
     } else {
-      colorClasses = 'bg-slate-900 text-slate-400 border-slate-700/60';
+      colorClasses = 'bg-slate-100 text-slate-600 border-slate-200';
     }
   } else if (variant === 'clarity' && clarity) {
     displayLabel = displayLabel || clarity.toUpperCase();
     if (clarity === 'clear') {
-      colorClasses = 'bg-emerald-950/50 text-emerald-300 border-emerald-800/60';
+      colorClasses = 'bg-emerald-50 text-emerald-700 border-emerald-200';
     } else if (clarity === 'incomplete') {
-      colorClasses = 'bg-amber-950/50 text-amber-300 border-amber-800/60';
+      colorClasses = 'bg-amber-50 text-amber-700 border-amber-200';
     } else {
-      colorClasses = 'bg-rose-950/50 text-rose-300 border-rose-800/60';
+      colorClasses = 'bg-rose-50 text-rose-700 border-rose-200';
     }
   } else if (variant === 'status' && status) {
     displayLabel = displayLabel || status.replace(/_/g, ' ').toUpperCase();
     if (status === 'supported') {
-      colorClasses = 'bg-emerald-950/50 text-emerald-300 border-emerald-800/60';
+      colorClasses = 'bg-emerald-50 text-emerald-700 border-emerald-200';
     } else if (status === 'partially_supported') {
-      colorClasses = 'bg-amber-950/50 text-amber-300 border-amber-800/60';
+      colorClasses = 'bg-amber-50 text-amber-700 border-amber-200';
     } else {
-      colorClasses = 'bg-rose-950/50 text-rose-300 border-rose-800/60';
+      colorClasses = 'bg-rose-50 text-rose-700 border-rose-200';
     }
   } else if (variant === 'source' && source) {
     const cleanSource = source.replace(/_/g, ' ');
     displayLabel = displayLabel || cleanSource.toUpperCase();
     if (source === 'direct_observation') {
-      colorClasses = 'bg-emerald-950/40 text-emerald-300 border-emerald-800/50';
+      colorClasses = 'bg-emerald-50 text-emerald-700 border-emerald-200 font-medium';
     } else if (source === 'user_reported' || source === 'user_reported_experience') {
-      colorClasses = 'bg-blue-950/40 text-blue-300 border-blue-800/50';
+      colorClasses = 'bg-teal-50 text-teal-700 border-teal-200 font-medium';
     } else if (source === 'interpretation') {
-      colorClasses = 'bg-purple-950/40 text-purple-300 border-purple-800/50';
+      colorClasses = 'bg-purple-50 text-purple-700 border-purple-200 font-medium';
     } else {
-      colorClasses = 'bg-slate-900 text-slate-400 border-slate-700/50';
+      colorClasses = 'bg-slate-100 text-slate-600 border-slate-200 font-medium';
     }
   } else if (variant === 'verdict' && verdict) {
     const cleanVerdict = verdict.replace(/_/g, ' ').toUpperCase();
     displayLabel = displayLabel || cleanVerdict;
     if (cleanVerdict === 'EVIDENCE SUPPORTS FURTHER TESTING') {
-      colorClasses = 'bg-emerald-950/60 text-emerald-300 border-emerald-700/80';
+      colorClasses = 'bg-emerald-50 text-emerald-800 border-emerald-300 font-semibold';
     } else if (cleanVerdict === 'REVISE THE HYPOTHESIS') {
-      colorClasses = 'bg-rose-950/60 text-rose-300 border-rose-700/80';
+      colorClasses = 'bg-rose-50 text-rose-800 border-rose-300 font-semibold';
     } else {
-      colorClasses = 'bg-amber-950/60 text-amber-300 border-amber-700/80';
+      colorClasses = 'bg-amber-50 text-amber-800 border-amber-300 font-semibold';
     }
   }
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded border text-[11px] font-mono tracking-wider uppercase font-medium select-none ${colorClasses} ${className}`}
+      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md border text-[11px] font-mono tracking-wide uppercase font-medium select-none shadow-2xs ${colorClasses} ${className}`}
     >
       {icon && <span className="shrink-0">{icon}</span>}
       <span>{displayLabel}</span>

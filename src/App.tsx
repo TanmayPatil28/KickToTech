@@ -132,7 +132,7 @@ export function App() {
   };
 
   return (
-    <div className="min-h-[100dvh] bg-[#0b0d13] text-slate-100 flex flex-col font-sans selection:bg-blue-600/30 selection:text-blue-200">
+    <div className="min-h-[100dvh] bg-[#0b0d13] text-slate-100 flex flex-col font-sans selection:bg-teal-100 selection:text-teal-900">
       {/* Top Header */}
       <Header
         currentStage={currentStage}
@@ -151,11 +151,11 @@ export function App() {
 
       {/* Global Alerts / Errors */}
       {(transitionError || apiError) && (
-        <div className="max-w-7xl mx-auto w-full px-4 lg:px-8 mt-4">
-          <div className="p-3.5 rounded-xl bg-rose-950/60 border border-rose-800/80 text-rose-200 text-xs flex items-center justify-between gap-3 shadow-lg">
-            <div className="flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
-              <span>{transitionError || apiError}</span>
+        <div className="max-w-7xl mx-auto w-full px-4 lg:px-8 mt-4 animate-stage-enter">
+          <div className="p-4 rounded-xl bg-rose-50 border border-rose-300 text-rose-900 text-xs flex items-center justify-between gap-3 shadow-sm font-sans">
+            <div className="flex items-center gap-2.5">
+              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+              <span className="font-medium">{transitionError || apiError}</span>
             </div>
             <button
               type="button"
@@ -163,7 +163,7 @@ export function App() {
                 clearTransitionError();
                 setApiError(null);
               }}
-              className="text-rose-400 hover:text-rose-200 p-1 rounded transition-colors"
+              className="text-rose-500 hover:text-rose-800 p-1 rounded-md transition-colors"
             >
               <X className="w-4 h-4" />
             </button>
@@ -173,7 +173,7 @@ export function App() {
 
       {/* Prominent Dirty State Warning Banner (When problem changed post-analysis & not on Stage 1) */}
       {isDirty && currentStage !== 'DRAFT' && (
-        <div className="max-w-7xl mx-auto w-full px-4 lg:px-8 mt-4">
+        <div className="max-w-7xl mx-auto w-full px-4 lg:px-8 mt-4 animate-stage-enter">
           <OutdatedBanner
             onReanalyze={() => {
               navigateTo('DRAFT');
@@ -255,8 +255,8 @@ export function App() {
         }
       />
 
-      {/* Modern Analytical Footer */}
-      <footer className="border-t border-[#242a3e] bg-[#0b0d13] py-4 px-4 text-center text-xs text-slate-500 font-mono">
+      {/* Clean Analytical Footer */}
+      <footer className="border-t border-slate-200/90 bg-white py-4 px-4 text-center text-xs text-slate-500 font-sans mt-auto">
         ProblemPilot &bull; The Evidence Challenge &bull; Epistemic Integrity Validation Engine &bull; PromptWars &times; KickToTech
       </footer>
     </div>

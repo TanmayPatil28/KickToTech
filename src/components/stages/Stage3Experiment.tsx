@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { useState, type FC } from 'react';
 import {
   FlaskConical,
   Clock,
@@ -11,6 +11,8 @@ import {
   ArrowLeft,
   ListOrdered,
   FileText,
+  Copy,
+  Check,
 } from 'lucide-react';
 import type { ValidationExperiment } from '../../types/index.ts';
 import { TactileButton } from '../common/TactileButton.tsx';
@@ -33,43 +35,54 @@ export const Stage3Experiment: FC<Stage3ExperimentProps> = ({
   isDirty = false,
   className = '',
 }) => {
+  const [copied, setCopied] = useState(false);
   const questions =
     experiment?.nonLeadingQuestions || experiment?.inquiryQuestions || [];
 
+  const handleCopyQuestions = () => {
+    if (!questions.length) return;
+    const text = questions
+      .map((q, idx) => `${idx + 1}. ${q}`)
+      .join('\n\n');
+    navigator.clipboard?.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
-    <div className={`space-y-6 ${className}`}>
+    <div className={`space-y-6 animate-stage-enter ${className}`}>
       {/* Dirty Outdated Banner */}
       {isDirty && (
         <OutdatedBanner onReanalyze={onReanalyze || onBackToAnalysis} />
       )}
 
       {/* Main Experiment Card */}
-      <div className="bg-[#181c2a] border border-[#242a3e] rounded-xl p-6 lg:p-8 shadow-lg space-y-6">
+      <div className="bg-[#181c2a] border border-[#242a3e] rounded-2xl p-6 lg:p-8 shadow-sm space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 pb-6 border-b border-[#242a3e]">
           <div>
-            <div className="flex items-center gap-2 text-blue-400 text-xs font-mono uppercase tracking-wider mb-1">
+            <div className="flex items-center gap-2 text-teal-700 text-xs font-mono uppercase tracking-wider mb-1.5 font-semibold">
               <FlaskConical className="w-4 h-4" />
               <span>Stage 3: Validation Experiment Design</span>
             </div>
-            <h2 className="text-xl font-semibold text-slate-100">
+            <h2 className="text-xl font-semibold text-slate-900 tracking-tight">
               {experiment.title || 'Targeted Behavioral Inquiry Experiment'}
             </h2>
-            <p className="text-sm text-slate-400 mt-1 leading-relaxed">
+            <p className="text-sm text-slate-600 mt-1 leading-relaxed">
               The smallest practical test to challenge your highest-risk assumption with empirical behavior.
             </p>
           </div>
 
           <div className="flex items-center gap-2.5 text-xs font-mono shrink-0">
             {experiment.estimatedEffort && (
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#12151f] border border-[#242a3e] text-slate-300">
-                <Clock className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-700 shadow-2xs font-medium">
+                <Clock className="w-3.5 h-3.5 text-teal-700 shrink-0" />
                 <span>{experiment.estimatedEffort}</span>
               </div>
             )}
             {experiment.targetParticipants && (
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#12151f] border border-[#242a3e] text-slate-300">
-                <Users className="w-3.5 h-3.5 text-purple-400 shrink-0" />
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-700 shadow-2xs font-medium">
+                <Users className="w-3.5 h-3.5 text-indigo-700 shrink-0" />
                 <span>{experiment.targetParticipants}</span>
               </div>
             )}
@@ -78,51 +91,71 @@ export const Stage3Experiment: FC<Stage3ExperimentProps> = ({
 
         {/* Hypothesis & Objective */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="p-4 rounded-xl bg-[#12151f] border border-[#242a3e] space-y-1">
-            <span className="text-[11px] font-mono uppercase text-slate-400 block tracking-wider font-semibold">
+          <div className="p-4 sm:p-5 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5 shadow-2xs">
+            <span className="text-[11px] font-mono uppercase text-slate-500 block tracking-wider font-semibold">
               Hypothesis Under Test:
             </span>
-            <p className="text-sm font-medium text-slate-200 leading-snug">
+            <p className="text-sm font-semibold text-slate-900 leading-snug">
               "{experiment.hypothesis}"
             </p>
           </div>
 
-          <div className="p-4 rounded-xl bg-blue-950/20 border border-blue-900/40 space-y-1">
-            <span className="text-[11px] font-mono uppercase text-blue-400 block tracking-wider font-semibold">
+          <div className="p-4 sm:p-5 rounded-xl bg-teal-50/50 border border-teal-200 space-y-1.5 shadow-2xs">
+            <span className="text-[11px] font-mono uppercase text-teal-800 block tracking-wider font-semibold">
               Experiment Objective:
             </span>
-            <p className="text-sm text-blue-100 leading-snug">
+            <p className="text-sm text-teal-950 font-medium leading-snug font-sans">
               {experiment.objective || 'Measure actual user friction and existing workaround satisfaction.'}
             </p>
           </div>
         </div>
 
         {/* Inquiry Questions — Non-Leading Rule */}
-        <div className="p-5 rounded-xl bg-[#12151f] border border-[#242a3e] space-y-3">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div className="p-5 sm:p-6 rounded-xl bg-white border border-slate-200 space-y-4 shadow-2xs">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-100">
             <div className="flex items-center gap-2">
-              <HelpCircle className="w-4 h-4 text-emerald-400" />
-              <h3 className="text-sm font-semibold text-slate-100">
+              <HelpCircle className="w-4 h-4 text-emerald-700" />
+              <h3 className="text-sm font-semibold text-slate-900">
                 Non-Leading Past-Behavior Inquiry Questions
               </h3>
             </div>
-            <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800/60 px-2 py-0.5 rounded self-start sm:self-auto font-medium">
-              Past Actions Only &bull; Zero Hypotheticals
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-mono text-emerald-800 bg-emerald-50 border border-emerald-300 px-2 py-0.5 rounded-md font-semibold">
+                Past Actions Only &bull; Zero Hypotheticals
+              </span>
+              <button
+                type="button"
+                onClick={handleCopyQuestions}
+                title="Copy questions to clipboard"
+                className="flex items-center gap-1 text-[11px] font-mono text-teal-800 hover:text-teal-950 bg-teal-50 hover:bg-teal-100 border border-teal-200 px-2.5 py-1 rounded-md transition-colors active:scale-[0.97] cursor-pointer"
+              >
+                {copied ? (
+                  <>
+                    <Check className="w-3 h-3 text-emerald-600" />
+                    <span>Copied!</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-3 h-3" />
+                    <span>Copy Cheat Sheet</span>
+                  </>
+                )}
+              </button>
+            </div>
           </div>
 
-          <p className="text-xs text-slate-400 leading-relaxed">
+          <p className="text-xs text-slate-600 leading-relaxed font-sans">
             Never ask <em>"Would you use an app that does X?"</em> or pitch your idea. Ask strictly about actual actions, costs, and decisions made during their most recent real experience.
           </p>
 
-          <div className="space-y-2 pt-1">
+          <div className="space-y-2.5 pt-1">
             {questions.map((q, idx) => (
               <div
                 key={idx}
-                className="flex items-start gap-3 p-3 rounded-lg bg-[#181c2a] border border-[#242a3e]/80 text-xs text-slate-200"
+                className="flex items-start gap-3 p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-800 shadow-2xs"
               >
-                <span className="font-mono text-slate-400 font-semibold">{idx + 1}.</span>
-                <span className="font-medium leading-relaxed">{q}</span>
+                <span className="font-mono text-teal-700 font-bold shrink-0">{idx + 1}.</span>
+                <span className="font-medium leading-relaxed font-sans">{q}</span>
               </div>
             ))}
           </div>
@@ -132,20 +165,20 @@ export const Stage3Experiment: FC<Stage3ExperimentProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Steps */}
           <div className="space-y-3">
-            <div className="flex items-center gap-2 text-xs font-mono uppercase text-slate-300">
-              <ListOrdered className="w-4 h-4 text-blue-400" />
+            <div className="flex items-center gap-2 text-xs font-mono uppercase text-slate-700">
+              <ListOrdered className="w-4 h-4 text-teal-700" />
               <span className="font-semibold tracking-wider">Execution Protocol</span>
             </div>
             <div className="space-y-2">
               {experiment.steps?.map((step, idx) => (
                 <div
                   key={idx}
-                  className="flex items-start gap-2.5 text-xs text-slate-300 p-2.5 rounded-lg bg-[#12151f] border border-[#242a3e]/60"
+                  className="flex items-start gap-3 text-xs text-slate-700 p-3 rounded-xl bg-white border border-slate-200 shadow-2xs"
                 >
-                  <span className="w-4 h-4 rounded-full bg-blue-950 text-blue-400 border border-blue-800 text-[10px] font-mono flex items-center justify-center shrink-0 mt-0.5">
+                  <span className="w-5 h-5 rounded-full bg-teal-50 text-teal-800 border border-teal-200 text-[10px] font-mono font-bold flex items-center justify-center shrink-0 mt-0.5">
                     {idx + 1}
                   </span>
-                  <span className="leading-snug">{step}</span>
+                  <span className="leading-snug font-sans">{step}</span>
                 </div>
               ))}
             </div>
@@ -153,18 +186,18 @@ export const Stage3Experiment: FC<Stage3ExperimentProps> = ({
 
           {/* Evidence to Record */}
           <div className="space-y-3">
-            <div className="flex items-center gap-2 text-xs font-mono uppercase text-slate-300">
-              <FileText className="w-4 h-4 text-purple-400" />
+            <div className="flex items-center gap-2 text-xs font-mono uppercase text-slate-700">
+              <FileText className="w-4 h-4 text-indigo-700" />
               <span className="font-semibold tracking-wider">Evidence to Record</span>
             </div>
             <div className="space-y-2">
               {experiment.evidenceToRecord?.map((ev, idx) => (
                 <div
                   key={idx}
-                  className="flex items-start gap-2 text-xs text-slate-300 p-2.5 rounded-lg bg-[#12151f] border border-[#242a3e]/60"
+                  className="flex items-start gap-2.5 text-xs text-slate-700 p-3 rounded-xl bg-white border border-slate-200 shadow-2xs"
                 >
-                  <CheckCircle2 className="w-3.5 h-3.5 text-slate-500 shrink-0 mt-0.5" />
-                  <span className="leading-snug">{ev}</span>
+                  <CheckCircle2 className="w-4 h-4 text-teal-600 shrink-0 mt-0.5" />
+                  <span className="leading-snug font-sans">{ev}</span>
                 </div>
               ))}
             </div>
@@ -173,26 +206,26 @@ export const Stage3Experiment: FC<Stage3ExperimentProps> = ({
 
         {/* Signals Grid: Supporting vs Weakening */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="p-4 rounded-xl bg-emerald-950/20 border border-emerald-900/40 space-y-2">
-            <div className="flex items-center gap-2 text-emerald-400 text-xs font-mono uppercase font-semibold">
+          <div className="p-4 sm:p-5 rounded-xl bg-emerald-50/50 border border-emerald-200 space-y-2 shadow-2xs">
+            <div className="flex items-center gap-2 text-emerald-800 text-xs font-mono uppercase font-semibold">
               <CheckCircle2 className="w-4 h-4" />
               <span>Supporting Signals (Corroborating)</span>
             </div>
-            <ul className="list-disc list-inside space-y-1.5 text-xs text-slate-300">
+            <ul className="list-disc list-inside space-y-1.5 text-xs text-slate-700">
               {experiment.supportingSignals?.map((sig, i) => (
-                <li key={i} className="leading-snug">{sig}</li>
+                <li key={i} className="leading-snug font-sans">{sig}</li>
               ))}
             </ul>
           </div>
 
-          <div className="p-4 rounded-xl bg-rose-950/20 border border-rose-900/40 space-y-2">
-            <div className="flex items-center gap-2 text-rose-400 text-xs font-mono uppercase font-semibold">
+          <div className="p-4 sm:p-5 rounded-xl bg-rose-50/50 border border-rose-200 space-y-2 shadow-2xs">
+            <div className="flex items-center gap-2 text-rose-800 text-xs font-mono uppercase font-semibold">
               <XCircle className="w-4 h-4" />
               <span>Weakening Signals (Counter-Evidence)</span>
             </div>
-            <ul className="list-disc list-inside space-y-1.5 text-xs text-slate-300">
+            <ul className="list-disc list-inside space-y-1.5 text-xs text-slate-700">
               {experiment.weakeningSignals?.map((sig, i) => (
-                <li key={i} className="leading-snug">{sig}</li>
+                <li key={i} className="leading-snug font-sans">{sig}</li>
               ))}
             </ul>
           </div>
@@ -200,13 +233,13 @@ export const Stage3Experiment: FC<Stage3ExperimentProps> = ({
 
         {/* Limitations */}
         {experiment.limitations && experiment.limitations.length > 0 && (
-          <div className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-400 text-xs flex items-start gap-2.5">
-            <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+          <div className="p-4 rounded-xl bg-amber-50/60 border border-amber-200 text-amber-950 text-xs flex items-start gap-3 shadow-2xs">
+            <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
             <div className="space-y-0.5">
-              <span className="font-semibold text-slate-300 block">
+              <span className="font-semibold text-amber-900 block font-mono">
                 Test Limitations & Epistemic Bounds:
               </span>
-              <p className="leading-relaxed">{experiment.limitations.join(' ')}</p>
+              <p className="leading-relaxed font-sans text-amber-900/90">{experiment.limitations.join(' ')}</p>
             </div>
           </div>
         )}

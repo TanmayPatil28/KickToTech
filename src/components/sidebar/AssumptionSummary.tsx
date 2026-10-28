@@ -1,7 +1,6 @@
 import type { FC } from 'react';
 import { Layers } from 'lucide-react';
 import type { Assumption } from '../../types/index.ts';
-import { Badge } from '../common/Badge.tsx';
 
 export interface AssumptionSummaryProps {
   assumptions: Assumption[];
@@ -22,12 +21,12 @@ export const AssumptionSummary: FC<AssumptionSummaryProps> = ({
 
   if (assumptions.length === 0) {
     return (
-      <div className={`bg-[#181c2a] border border-[#242a3e] rounded-xl p-4 shadow-sm text-xs text-slate-500 space-y-2 ${className}`}>
-        <div className="flex items-center gap-2 text-xs font-mono uppercase text-slate-400">
-          <Layers className="w-4 h-4 text-slate-500" />
+      <div className={`bg-[#181c2a] border border-[#242a3e] rounded-2xl p-4 sm:p-5 shadow-sm text-xs text-slate-500 space-y-2 ${className}`}>
+        <div className="flex items-center gap-2 text-xs font-mono uppercase text-slate-700 font-bold">
+          <Layers className="w-4 h-4 text-slate-400" />
           <span className="font-semibold tracking-wider">Assumption Matrix</span>
         </div>
-        <p className="italic text-slate-500">
+        <p className="italic text-slate-500 font-sans">
           No assumptions challenged yet. Run Stage 1 analysis to surface critical assumptions.
         </p>
       </div>
@@ -35,94 +34,69 @@ export const AssumptionSummary: FC<AssumptionSummaryProps> = ({
   }
 
   return (
-    <div className={`bg-[#181c2a] border border-[#242a3e] rounded-xl p-4 sm:p-5 shadow-sm space-y-4 ${className}`}>
+    <div className={`bg-[#181c2a] border border-[#242a3e] rounded-2xl p-4 sm:p-5 shadow-sm space-y-4 ${className}`}>
       {/* Header */}
       <div className="flex items-center justify-between pb-2 border-b border-[#242a3e]/80">
-        <div className="flex items-center gap-2 text-xs font-mono uppercase text-slate-300">
-          <Layers className="w-4 h-4 text-blue-400" />
+        <div className="flex items-center gap-2 text-xs font-mono uppercase text-slate-700 font-bold">
+          <Layers className="w-4 h-4 text-teal-700" />
           <span className="font-semibold tracking-wider">Assumption Matrix</span>
         </div>
-        <span className="text-xs font-mono text-slate-400">
+        <span className="text-xs font-mono text-slate-500 font-semibold">
           {assumptions.length} Total
         </span>
       </div>
 
       {/* Verification Status Metric Cards */}
       <div className="grid grid-cols-3 gap-2 text-center text-xs font-mono">
-        <div className="p-2.5 rounded-lg bg-rose-950/30 border border-rose-900/50 text-rose-300 flex flex-col justify-center">
-          <div className="text-lg font-bold">{unverified.length}</div>
-          <div className="text-[10px] text-rose-400 uppercase tracking-wider mt-0.5 font-medium">
+        <div className="p-2.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 flex flex-col justify-center shadow-2xs">
+          <div className="text-lg font-bold text-rose-900">{unverified.length}</div>
+          <div className="text-[10px] text-rose-700 uppercase tracking-wider mt-0.5 font-semibold">
             Unverified
           </div>
         </div>
-        <div className="p-2.5 rounded-lg bg-amber-950/30 border border-amber-900/50 text-amber-300 flex flex-col justify-center">
-          <div className="text-lg font-bold">{partiallySupported.length}</div>
-          <div className="text-[10px] text-amber-400 uppercase tracking-wider mt-0.5 font-medium">
+        <div className="p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 flex flex-col justify-center shadow-2xs">
+          <div className="text-lg font-bold text-amber-900">{partiallySupported.length}</div>
+          <div className="text-[10px] text-amber-700 uppercase tracking-wider mt-0.5 font-semibold">
             Partial
           </div>
         </div>
-        <div className="p-2.5 rounded-lg bg-emerald-950/30 border border-emerald-900/50 text-emerald-300 flex flex-col justify-center">
-          <div className="text-lg font-bold">{supported.length}</div>
-          <div className="text-[10px] text-emerald-400 uppercase tracking-wider mt-0.5 font-medium">
+        <div className="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex flex-col justify-center shadow-2xs">
+          <div className="text-lg font-bold text-emerald-900">{supported.length}</div>
+          <div className="text-[10px] text-emerald-700 uppercase tracking-wider mt-0.5 font-semibold">
             Supported
           </div>
         </div>
       </div>
 
       {/* Risk Distribution Breakdown */}
-      <div className="bg-[#12151f] p-3 rounded-lg border border-[#242a3e]/60 space-y-2">
-        <div className="flex items-center justify-between text-[11px] font-mono text-slate-400 uppercase tracking-wider">
-          <span>Risk Distribution</span>
-          <span className="text-rose-400 font-semibold">{highRisk.length} High Risk</span>
+      <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-2 shadow-2xs">
+        <div className="flex items-center justify-between text-[11px] font-mono text-slate-600 uppercase tracking-wider">
+          <span className="font-semibold">Risk Distribution</span>
+          <span className="text-rose-700 font-bold">{highRisk.length} High Risk</span>
         </div>
 
-        <div className="flex gap-1.5 h-2 rounded overflow-hidden bg-slate-900">
+        <div className="flex gap-1.5 h-2 rounded-full overflow-hidden bg-slate-200">
           <div
             style={{ width: `${(highRisk.length / assumptions.length) * 100}%` }}
-            className="bg-rose-500 rounded-xs"
+            className="bg-rose-500"
             title={`${highRisk.length} High Risk`}
           />
           <div
             style={{ width: `${(mediumRisk.length / assumptions.length) * 100}%` }}
-            className="bg-amber-500 rounded-xs"
+            className="bg-amber-400"
             title={`${mediumRisk.length} Medium Risk`}
           />
           <div
             style={{ width: `${(lowRisk.length / assumptions.length) * 100}%` }}
-            className="bg-slate-600 rounded-xs"
+            className="bg-slate-400"
             title={`${lowRisk.length} Low Risk`}
           />
         </div>
-      </div>
 
-      {/* High-Risk Assumptions List */}
-      <div className="space-y-2">
-        <span className="text-[10px] font-mono uppercase text-slate-500 tracking-wider block">
-          Critical Focus Items:
-        </span>
-        <div className="space-y-1.5 max-h-52 overflow-y-auto pr-1">
-          {assumptions.map((asm) => {
-            const risk = asm.riskLevel || asm.risk || 'medium';
-            return (
-              <div
-                key={asm.id}
-                className="p-2 rounded-lg bg-[#12151f] border border-[#242a3e] text-xs flex flex-col gap-1"
-              >
-                <div className="flex items-center justify-between gap-1">
-                  <span className="font-mono text-[10px] text-slate-300 font-semibold">
-                    {asm.id}
-                  </span>
-                  <div className="flex items-center gap-1">
-                    <Badge variant="risk" risk={risk} className="text-[9px] px-1.5 py-0" />
-                    <Badge variant="status" status={asm.status} className="text-[9px] px-1.5 py-0" />
-                  </div>
-                </div>
-                <p className="text-slate-300 text-[11px] leading-snug line-clamp-2">
-                  {asm.claim}
-                </p>
-              </div>
-            );
-          })}
+        <div className="flex items-center justify-between text-[10px] font-mono text-slate-500 pt-0.5">
+          <span>{highRisk.length} High</span>
+          <span>{mediumRisk.length} Med</span>
+          <span>{lowRisk.length} Low</span>
         </div>
       </div>
     </div>

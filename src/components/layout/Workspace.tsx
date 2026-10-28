@@ -17,14 +17,14 @@ export const Workspace: FC<WorkspaceProps> = ({
   return (
     <div className={`max-w-7xl mx-auto w-full px-4 lg:px-8 py-6 flex-1 flex flex-col ${className}`}>
       {/* Mobile Tab Switcher (< 1024px) */}
-      <div className="flex lg:hidden mb-4 p-1 rounded-xl bg-[#12151f] border border-[#242a3e] text-xs font-medium">
+      <div className="flex lg:hidden mb-5 p-1 rounded-xl bg-slate-100 border border-slate-200 text-xs font-medium shadow-2xs">
         <button
           type="button"
           onClick={() => setMobileTab('task')}
           className={`flex-1 flex items-center justify-center gap-2 py-2.5 min-h-[44px] rounded-lg transition-all duration-150 ease-out active:scale-[0.97] select-none ${
             mobileTab === 'task'
-              ? 'bg-blue-600 text-white font-semibold shadow-sm'
-              : 'text-slate-400 hover:text-slate-200'
+              ? 'bg-teal-700 text-white font-semibold shadow-xs'
+              : 'text-slate-600 hover:text-slate-900'
           }`}
         >
           <Layers className="w-4 h-4" />
@@ -36,8 +36,8 @@ export const Workspace: FC<WorkspaceProps> = ({
           onClick={() => setMobileTab('context')}
           className={`flex-1 flex items-center justify-center gap-2 py-2.5 min-h-[44px] rounded-lg transition-all duration-150 ease-out active:scale-[0.97] select-none ${
             mobileTab === 'context'
-              ? 'bg-purple-600 text-white font-semibold shadow-sm'
-              : 'text-slate-400 hover:text-slate-200'
+              ? 'bg-slate-800 text-white font-semibold shadow-xs'
+              : 'text-slate-600 hover:text-slate-900'
           }`}
         >
           <FileText className="w-4 h-4" />
@@ -46,7 +46,7 @@ export const Workspace: FC<WorkspaceProps> = ({
       </div>
 
       {/* Main Grid Workspace */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start flex-1">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start flex-1">
         {/* Main Column */}
         <section
           className={`lg:col-span-8 space-y-6 ${

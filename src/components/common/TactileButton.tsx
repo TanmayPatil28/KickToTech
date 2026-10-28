@@ -23,23 +23,23 @@ export const TactileButton: FC<TactileButtonProps> = ({
   ...rest
 }) => {
   const baseStyles =
-    'inline-flex items-center justify-center font-medium transition-all duration-150 ease-out select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b0d13]';
+    'inline-flex items-center justify-center font-medium transition-all duration-150 ease-out select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2';
 
   const tactileMotion = disabled || isLoading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer active:scale-[0.97]';
 
   const variantStyles = {
     primary:
-      'bg-blue-600 hover:bg-blue-500 text-white shadow-sm hover:shadow border border-blue-500/30',
+      'bg-teal-700 hover:bg-teal-800 text-white shadow-xs hover:shadow-sm border border-teal-800/40 font-semibold',
     secondary:
-      'bg-[#181c2a] hover:bg-[#1e2335] text-slate-200 border border-[#242a3e] hover:border-[#384260]',
+      'bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 hover:border-slate-400 shadow-2xs',
     danger:
-      'bg-rose-600 hover:bg-rose-500 text-white border border-rose-500/30',
+      'bg-rose-600 hover:bg-rose-700 text-white border border-rose-700 shadow-2xs',
     ghost:
-      'bg-transparent hover:bg-slate-800/50 text-slate-300 hover:text-white',
+      'bg-transparent hover:bg-slate-100 text-slate-600 hover:text-slate-900',
     outline:
-      'bg-transparent hover:bg-[#181c2a] text-slate-300 border border-[#242a3e] hover:border-[#384260]',
+      'bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 hover:border-slate-400 shadow-2xs',
     subtle:
-      'bg-slate-800/60 hover:bg-slate-800 text-slate-300 border border-slate-700/40',
+      'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200',
   }[variant];
 
   // Touch targets >= 44px on mobile ergonomic standards

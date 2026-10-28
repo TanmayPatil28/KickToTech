@@ -16,7 +16,7 @@ const STAGE_META: Record<
   DRAFT: {
     step: 1,
     title: 'Define Problem',
-    subtitle: 'Capture friction & context',
+    subtitle: 'Friction & context',
     short: '1. Define',
   },
   ANALYZED: {
@@ -28,13 +28,13 @@ const STAGE_META: Record<
   TEST_DEFINED: {
     step: 3,
     title: 'Validation Experiment',
-    subtitle: 'Design non-leading test',
+    subtitle: 'Non-leading test design',
     short: '3. Test',
   },
   FINDINGS_ENTERED: {
     step: 4,
     title: 'Record Findings',
-    subtitle: 'Log empirical observations',
+    subtitle: 'Log observed facts',
     short: '4. Findings',
   },
   EVIDENCE_REVIEWED: {
@@ -64,7 +64,7 @@ export const StageProgressBar: FC<StageProgressBarProps> = ({
   return (
     <nav
       aria-label="Validation Workflow Progress"
-      className={`bg-[#12151f] border-b border-[#242a3e] px-4 lg:px-8 py-2.5 overflow-x-auto ${className}`}
+      className={`bg-white border-b border-slate-200/90 px-4 lg:px-8 py-2 overflow-x-auto shadow-2xs ${className}`}
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between min-w-[650px] sm:min-w-0">
         {STAGES.map((stage, idx) => {
@@ -91,19 +91,19 @@ export const StageProgressBar: FC<StageProgressBarProps> = ({
                 }
                 className={`flex items-center gap-2.5 py-1.5 px-3 rounded-lg transition-all duration-150 ease-out text-left select-none min-h-[44px] ${
                   isCurrent
-                    ? 'bg-blue-950/60 border border-blue-600/60 text-blue-100 shadow-sm'
+                    ? 'bg-teal-50 border border-teal-300 text-teal-900 shadow-2xs'
                     : isClickable
-                    ? 'hover:bg-[#181c2a] cursor-pointer text-slate-300 active:scale-[0.97]'
-                    : 'opacity-40 cursor-not-allowed text-slate-500'
+                    ? 'hover:bg-slate-50 cursor-pointer text-slate-700 active:scale-[0.97]'
+                    : 'opacity-40 cursor-not-allowed text-slate-400'
                 }`}
               >
                 <div
                   className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-mono font-semibold transition-colors shrink-0 ${
                     isCompleted
-                      ? 'bg-emerald-950 text-emerald-400 border border-emerald-700/60'
+                      ? 'bg-emerald-50 text-emerald-700 border border-emerald-300'
                       : isCurrent
-                      ? 'bg-blue-600 text-white shadow-xs'
-                      : 'bg-[#181c2a] border border-[#242a3e] text-slate-400'
+                      ? 'bg-teal-700 text-white shadow-2xs'
+                      : 'bg-slate-100 border border-slate-200 text-slate-500'
                   }`}
                 >
                   {isCompleted ? <Check className="w-3.5 h-3.5" /> : info.step}
@@ -111,20 +111,20 @@ export const StageProgressBar: FC<StageProgressBarProps> = ({
                 <div className="flex flex-col">
                   <span
                     className={`text-xs font-medium tracking-tight ${
-                      isCurrent ? 'text-white font-semibold' : 'text-slate-300'
+                      isCurrent ? 'text-teal-950 font-semibold' : 'text-slate-700'
                     }`}
                   >
                     <span className="hidden sm:inline">{info.title}</span>
                     <span className="sm:hidden">{info.short}</span>
                   </span>
-                  <span className="text-[10px] text-slate-400 hidden xl:inline">
+                  <span className="text-[10px] text-slate-500 hidden xl:inline">
                     {info.subtitle}
                   </span>
                 </div>
               </button>
 
               {idx < STAGES.length - 1 && (
-                <ChevronRight className="w-4 h-4 text-slate-700 shrink-0 mx-1 hidden md:block" />
+                <ChevronRight className="w-4 h-4 text-slate-300 shrink-0 mx-1 hidden md:block" />
               )}
             </Fragment>
           );

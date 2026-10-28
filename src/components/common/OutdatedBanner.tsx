@@ -14,17 +14,17 @@ export const OutdatedBanner: FC<OutdatedBannerProps> = ({
   return (
     <div
       role="alert"
-      className={`p-4 rounded-xl bg-amber-950/60 border border-amber-600/80 text-amber-200 shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${className}`}
+      className={`p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-950 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${className}`}
     >
       <div className="flex items-start gap-3">
-        <div className="w-8 h-8 rounded-lg bg-amber-900/50 border border-amber-700/60 flex items-center justify-center shrink-0 mt-0.5">
-          <AlertTriangle className="w-4 h-4 text-amber-400" />
+        <div className="w-8 h-8 rounded-lg bg-amber-100 border border-amber-300 flex items-center justify-center shrink-0 mt-0.5 text-amber-700">
+          <AlertTriangle className="w-4 h-4" />
         </div>
         <div>
-          <h4 className="text-xs font-semibold uppercase tracking-wider text-amber-300 font-mono">
+          <h4 className="text-xs font-semibold uppercase tracking-wider text-amber-800 font-mono">
             Analysis Outdated — Problem Statement Modified
           </h4>
-          <p className="text-xs text-amber-200/90 mt-0.5 leading-relaxed">
+          <p className="text-xs text-amber-900/85 mt-0.5 leading-relaxed font-sans">
             The core problem formulation was edited after the current analysis was generated. Existing assumptions, experiments, and evidence mappings may no longer reflect the revised hypothesis.
           </p>
         </div>
@@ -36,8 +36,8 @@ export const OutdatedBanner: FC<OutdatedBannerProps> = ({
             size="sm"
             variant="secondary"
             onClick={onReanalyze}
-            icon={<RotateCcw className="w-3.5 h-3.5 text-amber-400" />}
-            className="border-amber-700/80 text-amber-200 hover:bg-amber-900/50"
+            icon={<RotateCcw className="w-3.5 h-3.5 text-amber-700" />}
+            className="border-amber-300 bg-white text-amber-900 hover:bg-amber-100/50 shadow-2xs"
           >
             Re-run Analysis
           </TactileButton>
