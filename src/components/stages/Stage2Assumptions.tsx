@@ -127,30 +127,30 @@ export const Stage2Assumptions: FC<Stage2AssumptionsProps> = ({
             </div>
           </div>
 
-          <div className="p-4 sm:p-5 rounded-xl bg-teal-950/20 border border-teal-500/30 space-y-2">
-            <div className="flex items-center gap-1.5 text-teal-400 text-[11px] font-mono uppercase tracking-wider font-semibold">
-              <Sparkles className="w-3.5 h-3.5 text-teal-400" />
+          <div className="p-4 sm:p-5 rounded-xl bg-teal-50/70 border border-teal-200 space-y-2 shadow-2xs">
+            <div className="flex items-center gap-1.5 text-teal-800 text-[11px] font-mono uppercase tracking-wider font-semibold">
+              <Sparkles className="w-3.5 h-3.5 text-teal-700" />
               <span>Sharpened Problem Formulation:</span>
             </div>
-            <p className="text-sm text-teal-100 font-medium leading-relaxed font-sans">
+            <p className="text-sm text-teal-950 font-semibold leading-relaxed font-sans">
               "{analysis.refinedProblemStatement}"
             </p>
-            <div className="text-[11px] text-teal-400/80 pt-1.5 border-t border-teal-500/20">
-              User Ambiguity: <span className="font-semibold text-teal-200">{analysis.targetUserAmbiguity}</span>
+            <div className="text-[11px] text-teal-800 pt-1.5 border-t border-teal-200/60 font-sans">
+              User Ambiguity: <span className="font-semibold text-teal-950">{analysis.targetUserAmbiguity}</span>
             </div>
           </div>
         </div>
 
         {/* Highest Risk Uncertainty Callout */}
         {analysis.highestRiskUncertainty && (
-          <div className="p-4 sm:p-5 rounded-xl bg-rose-950/30 border border-rose-500/30 text-rose-200 space-y-1.5">
+          <div className="p-4 sm:p-5 rounded-xl bg-rose-50/70 border border-rose-200 text-rose-950 space-y-1.5 shadow-2xs">
             <div className="flex items-center gap-2">
-              <Flame className="w-4 h-4 text-rose-400 shrink-0" />
-              <span className="text-xs font-mono uppercase tracking-wider text-rose-400 block font-bold">
+              <Flame className="w-4 h-4 text-rose-600 shrink-0" />
+              <span className="text-xs font-mono uppercase tracking-wider text-rose-800 block font-bold">
                 Highest-Risk Uncertainty
               </span>
             </div>
-            <p className="text-sm leading-relaxed text-rose-200 font-medium font-sans">
+            <p className="text-sm leading-relaxed text-rose-950 font-medium font-sans">
               {analysis.highestRiskUncertainty}
             </p>
           </div>

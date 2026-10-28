@@ -57,32 +57,32 @@ export const Stage3Experiment: FC<Stage3ExperimentProps> = ({
       )}
 
       {/* Main Experiment Card */}
-      <div className="bg-[#101524] border border-[#212a45] rounded-2xl p-6 lg:p-8 shadow-sm space-y-6">
+      <div className="bg-[#181c2a] border border-[#242a3e] rounded-2xl p-6 lg:p-8 shadow-premium-card space-y-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 pb-6 border-b border-[#212a45]">
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 pb-6 border-b border-zinc-200">
           <div>
-            <div className="flex items-center gap-2 text-teal-400 text-xs font-mono uppercase tracking-wider mb-1.5 font-semibold">
+            <div className="flex items-center gap-2 text-teal-700 text-xs font-mono uppercase tracking-wider mb-1.5 font-semibold">
               <FlaskConical className="w-4 h-4" />
               <span>Stage 3: Validation Experiment Design</span>
             </div>
-            <h2 className="text-xl font-semibold text-slate-100 tracking-tight">
+            <h2 className="text-xl font-bold text-zinc-950 tracking-tight font-sans">
               {experiment.title || 'Targeted Behavioral Inquiry Experiment'}
             </h2>
-            <p className="text-sm text-slate-400 mt-1 leading-relaxed">
+            <p className="text-sm text-zinc-600 mt-1 leading-relaxed font-sans">
               The smallest practical test to challenge your highest-risk assumption with empirical behavior.
             </p>
           </div>
 
           <div className="flex items-center gap-2.5 text-xs font-mono shrink-0">
             {experiment.estimatedEffort && (
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#151b2e] border border-[#212a45] text-slate-300 font-medium">
-                <Clock className="w-3.5 h-3.5 text-teal-400 shrink-0" />
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-50 border border-zinc-200 text-zinc-700 font-medium shadow-2xs">
+                <Clock className="w-3.5 h-3.5 text-teal-700 shrink-0" />
                 <span>{experiment.estimatedEffort}</span>
               </div>
             )}
             {experiment.targetParticipants && (
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#151b2e] border border-[#212a45] text-slate-300 font-medium">
-                <Users className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-50 border border-zinc-200 text-zinc-700 font-medium shadow-2xs">
+                <Users className="w-3.5 h-3.5 text-indigo-700 shrink-0" />
                 <span>{experiment.targetParticipants}</span>
               </div>
             )}
@@ -91,48 +91,48 @@ export const Stage3Experiment: FC<Stage3ExperimentProps> = ({
 
         {/* Hypothesis & Objective */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="p-4 sm:p-5 rounded-xl bg-[#0c0f19] border border-[#1d243b] space-y-1.5">
-            <span className="text-[11px] font-mono uppercase text-slate-500 block tracking-wider font-semibold">
+          <div className="p-4 sm:p-5 rounded-xl bg-white border border-zinc-200/90 space-y-1.5 shadow-2xs">
+            <span className="text-[11px] font-mono uppercase text-zinc-500 block tracking-wider font-semibold">
               Hypothesis Under Test:
             </span>
-            <p className="text-sm font-semibold text-slate-100 leading-snug">
+            <p className="text-sm font-semibold text-zinc-950 leading-snug font-sans">
               "{experiment.hypothesis}"
             </p>
           </div>
 
-          <div className="p-4 sm:p-5 rounded-xl bg-teal-950/20 border border-teal-500/30 space-y-1.5">
-            <span className="text-[11px] font-mono uppercase text-teal-400 block tracking-wider font-semibold">
+          <div className="p-4 sm:p-5 rounded-xl bg-teal-50/70 border border-teal-200 space-y-1.5 shadow-2xs">
+            <span className="text-[11px] font-mono uppercase text-teal-800 block tracking-wider font-semibold">
               Experiment Objective:
             </span>
-            <p className="text-sm text-teal-100 font-medium leading-snug font-sans">
+            <p className="text-sm text-teal-950 font-medium leading-snug font-sans">
               {experiment.objective || 'Measure actual user friction and existing workaround satisfaction.'}
             </p>
           </div>
         </div>
 
         {/* Inquiry Questions — Non-Leading Rule */}
-        <div className="p-5 sm:p-6 rounded-xl bg-[#0c0f19] border border-[#1d243b] space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-[#1d243b]">
+        <div className="p-5 sm:p-6 rounded-xl bg-white border border-zinc-200/90 space-y-4 shadow-2xs">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-zinc-100">
             <div className="flex items-center gap-2">
-              <HelpCircle className="w-4 h-4 text-emerald-400" />
-              <h3 className="text-sm font-semibold text-slate-100">
+              <HelpCircle className="w-4 h-4 text-emerald-700" />
+              <h3 className="text-sm font-semibold text-zinc-900 font-sans">
                 Non-Leading Past-Behavior Inquiry Questions
               </h3>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-mono text-emerald-300 bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 rounded-md font-semibold">
+              <span className="text-[10px] font-mono text-emerald-800 bg-emerald-50 border border-emerald-300 px-2 py-0.5 rounded-md font-semibold">
                 Past Actions Only &bull; Zero Hypotheticals
               </span>
               <button
                 type="button"
                 onClick={handleCopyQuestions}
                 title="Copy questions to clipboard"
-                className="flex items-center gap-1 text-[11px] font-mono text-slate-300 hover:text-white bg-[#151b2e] hover:bg-[#1c243e] border border-[#263152] px-2.5 py-1 rounded-md transition-colors active:scale-[0.97] cursor-pointer"
+                className="flex items-center gap-1 text-[11px] font-mono text-zinc-700 hover:text-zinc-950 bg-zinc-100 hover:bg-zinc-200/80 border border-zinc-200 px-2.5 py-1 rounded-md transition-colors active:scale-[0.97] cursor-pointer"
               >
                 {copied ? (
                   <>
-                    <Check className="w-3 h-3 text-emerald-400" />
-                    <span className="text-emerald-400">Copied!</span>
+                    <Check className="w-3 h-3 text-emerald-600" />
+                    <span className="text-emerald-700 font-semibold">Copied!</span>
                   </>
                 ) : (
                   <>

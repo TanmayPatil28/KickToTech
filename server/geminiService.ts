@@ -288,6 +288,21 @@ function getModel(): string {
   return process.env.GEMINI_MODEL || 'gemini-3.5-flash';
 }
 
+export function sanitizeErrorMessage(msg: string): string {
+  if (!msg) return 'AI service error';
+  // Redact any Google API key pattern
+  let sanitized = msg.replace(/AIza[0-9A-Za-z\-_]{35}/g, '[REDACTED_KEY]');
+  sanitized = sanitized.replace(/api_key:[a-zA-Z0-9_\-]+/g, 'api_key:[REDACTED]');
+
+  if (sanitized.includes('CONSUMER_SUSPENDED') || sanitized.includes('has been suspended')) {
+    return 'Your Gemini API key has been suspended by Google Cloud (403 PERMISSION_DENIED: CONSUMER_SUSPENDED). Please generate a fresh key in Google AI Studio or switch to Demo Mode.';
+  }
+  if (sanitized.includes('API_KEY_INVALID') || sanitized.includes('API key not valid')) {
+    return 'Gemini API key is invalid (400 API_KEY_INVALID). Please check your GEMINI_API_KEY in .env or switch to Demo Mode.';
+  }
+  return sanitized;
+}
+
 export async function callGeminiWithSchema<T>(
   prompt: string,
   schema: any,
@@ -356,18 +371,18 @@ export async function callGeminiWithSchema<T>(
         err.message?.includes('PERMISSION_DENIED') ||
         err.message?.includes('suspended')
       ) {
-        throw new AiServiceError(`Gemini API authorization error: ${err.message || String(err)}`);
+        throw new AiServiceError(`Gemini API authorization error: ${sanitizeErrorMessage(err.message || String(err))}`);
       }
 
       // If attempts remain, append clarifying correction
       if (attempt < maxRetries) {
-        currentPrompt = `${prompt}\n\n[RETRY ATTEMPT ${attempt + 1}/${maxRetries}]: Previous output had issues: ${err.message}. Strictly return valid JSON conforming to the schema.`;
+        currentPrompt = `${prompt}\n\n[RETRY ATTEMPT ${attempt + 1}/${maxRetries}]: Previous output had issues: ${sanitizeErrorMessage(err.message)}. Strictly return valid JSON conforming to the schema.`;
       }
     }
   }
 
   throw new AiServiceError(
-    `AI service failed after ${maxRetries} retries: ${lastError?.message || 'Unknown error'}`
+    `AI service failed after ${maxRetries} retries: ${sanitizeErrorMessage(lastError?.message || 'Unknown error')}`
   );
 }
 

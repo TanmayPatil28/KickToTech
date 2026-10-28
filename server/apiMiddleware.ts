@@ -6,6 +6,7 @@ import {
   reviewEvidence,
   MissingApiKeyError,
   AiServiceError,
+  sanitizeErrorMessage,
 } from './geminiService.ts';
 import {
   getDemoScenario,
@@ -101,20 +102,20 @@ export function createApiMiddleware(options: ApiMiddlewareOptions = {}) {
           if (err instanceof MissingApiKeyError || err.code === 'MISSING_API_KEY') {
             return sendJson(res, 401, {
               success: false,
-              error: err.message,
+              error: sanitizeErrorMessage(err.message),
               code: 'MISSING_API_KEY',
             });
           }
           if (err instanceof AiServiceError || err.code === 'AI_SERVICE_ERROR') {
             return sendJson(res, 502, {
               success: false,
-              error: err.message,
+              error: sanitizeErrorMessage(err.message),
               code: 'AI_SERVICE_ERROR',
             });
           }
           return sendJson(res, 502, {
             success: false,
-            error: err.message || 'AI service error',
+            error: sanitizeErrorMessage(err.message || 'AI service error'),
             code: 'AI_SERVICE_ERROR',
           });
         }
@@ -217,13 +218,13 @@ export function createApiMiddleware(options: ApiMiddlewareOptions = {}) {
           if (err instanceof MissingApiKeyError || err.code === 'MISSING_API_KEY') {
             return sendJson(res, 401, {
               success: false,
-              error: err.message,
+              error: sanitizeErrorMessage(err.message),
               code: 'MISSING_API_KEY',
             });
           }
           return sendJson(res, 502, {
             success: false,
-            error: err.message || 'AI service error',
+            error: sanitizeErrorMessage(err.message || 'AI service error'),
             code: 'AI_SERVICE_ERROR',
           });
         }
@@ -308,13 +309,13 @@ export function createApiMiddleware(options: ApiMiddlewareOptions = {}) {
           if (err instanceof MissingApiKeyError || err.code === 'MISSING_API_KEY') {
             return sendJson(res, 401, {
               success: false,
-              error: err.message,
+              error: sanitizeErrorMessage(err.message),
               code: 'MISSING_API_KEY',
             });
           }
           return sendJson(res, 502, {
             success: false,
-            error: err.message || 'AI service error',
+            error: sanitizeErrorMessage(err.message || 'AI service error'),
             code: 'AI_SERVICE_ERROR',
           });
         }

@@ -152,21 +152,36 @@ export function App() {
       {/* Global Alerts / Errors */}
       {(transitionError || apiError) && (
         <div className="max-w-7xl mx-auto w-full px-4 lg:px-8 mt-4 animate-stage-enter">
-          <div className="p-4 rounded-xl bg-rose-950/40 border border-rose-500/30 text-rose-200 text-xs flex items-center justify-between gap-3 shadow-sm font-sans">
-            <div className="flex items-center gap-2.5">
-              <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
-              <span className="font-medium">{transitionError || apiError}</span>
+          <div className="p-4 rounded-xl bg-rose-950/40 border border-rose-500/40 text-rose-200 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md font-sans">
+            <div className="flex items-start sm:items-center gap-2.5">
+              <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5 sm:mt-0" />
+              <span className="font-medium leading-relaxed">{transitionError || apiError}</span>
             </div>
-            <button
-              type="button"
-              onClick={() => {
-                clearTransitionError();
-                setApiError(null);
-              }}
-              className="text-rose-400 hover:text-rose-200 p-1 rounded-md transition-colors cursor-pointer"
-            >
-              <X className="w-4 h-4" />
-            </button>
+            <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
+              {apiError && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setApiError(null);
+                    clearTransitionError();
+                    loadDemoScenario('vague_study');
+                  }}
+                  className="px-2.5 py-1 text-xs font-mono font-medium rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30 transition-colors cursor-pointer active:scale-[0.97]"
+                >
+                  Switch to Demo Mode
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={() => {
+                  clearTransitionError();
+                  setApiError(null);
+                }}
+                className="text-rose-400 hover:text-rose-200 p-1 rounded-md transition-colors cursor-pointer active:scale-[0.97]"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -256,7 +271,7 @@ export function App() {
       />
 
       {/* Clean Analytical Footer */}
-      <footer className="border-t border-[#1d243b] bg-[#0c0f19] py-4 px-4 text-center text-xs text-slate-500 font-sans mt-auto">
+      <footer className="border-t border-zinc-200 bg-white py-4 px-4 text-center text-xs text-zinc-500 font-sans mt-auto">
         ProblemPilot &bull; The Evidence Challenge &bull; Epistemic Integrity Validation Engine &bull; PromptWars &times; KickToTech
       </footer>
     </div>
