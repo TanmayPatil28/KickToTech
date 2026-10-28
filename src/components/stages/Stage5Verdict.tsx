@@ -403,12 +403,13 @@ ${config.actionProtocol.map((s, i) => `${i + 1}. ${s}`).join('\n')}
         </div>
 
         {/* Action Controls */}
-        <div className="flex items-center justify-between pt-6 border-t border-[#212a45]">
+        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-6 border-t border-[#212a45]">
           <TactileButton
             variant="secondary"
             size="md"
             onClick={onBackToFindings}
             icon={<ArrowLeft className="w-4 h-4" />}
+            className="w-full sm:w-auto justify-center"
           >
             Review Findings Ledger
           </TactileButton>
@@ -419,6 +420,7 @@ ${config.actionProtocol.map((s, i) => `${i + 1}. ${s}`).join('\n')}
             onClick={onRefineHypothesis}
             icon={<ArrowRight className="w-4 h-4" />}
             iconPosition="right"
+            className="w-full sm:w-auto justify-center"
           >
             Refine Problem Formulation
           </TactileButton>

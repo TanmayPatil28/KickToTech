@@ -64,9 +64,9 @@ export const StageProgressBar: FC<StageProgressBarProps> = ({
   return (
     <nav
       aria-label="Validation Workflow Progress"
-      className={`bg-white border-b border-zinc-200/80 px-4 lg:px-8 py-2 overflow-x-auto ${className}`}
+      className={`bg-white border-b border-zinc-200/80 px-3 sm:px-4 lg:px-8 py-2 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden ${className}`}
     >
-      <div className="max-w-7xl mx-auto flex items-center justify-between min-w-[620px] sm:min-w-0">
+      <div className="max-w-7xl mx-auto flex items-center justify-between min-w-[540px] sm:min-w-0">
         {STAGES.map((stage, idx) => {
           const info = STAGE_META[stage];
           const isCurrent = stage === currentStage;

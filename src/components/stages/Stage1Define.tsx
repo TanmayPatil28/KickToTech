@@ -281,7 +281,7 @@ export const Stage1Define: FC<Stage1DefineProps> = ({
         </div>
 
         {/* Action Button */}
-        <div className="flex justify-end pt-2">
+        <div className="flex sm:justify-end pt-2">
           <TactileButton
             type="submit"
             variant="primary"
@@ -290,6 +290,7 @@ export const Stage1Define: FC<Stage1DefineProps> = ({
             disabled={!validation.valid || isLoading}
             icon={<ArrowRight className="w-4 h-4" />}
             iconPosition="right"
+            className="w-full sm:w-auto justify-center"
           >
             Analyze Problem & Challenge Assumptions
           </TactileButton>

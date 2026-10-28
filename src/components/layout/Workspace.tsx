@@ -15,33 +15,33 @@ export const Workspace: FC<WorkspaceProps> = ({
   const [mobileTab, setMobileTab] = useState<'task' | 'context'>('task');
 
   return (
-    <div className={`max-w-7xl mx-auto w-full px-4 lg:px-8 py-6 flex-1 flex flex-col ${className}`}>
+    <div className={`max-w-7xl mx-auto w-full px-3 sm:px-4 lg:px-8 py-4 sm:py-6 flex-1 flex flex-col ${className}`}>
       {/* Mobile Tab Switcher (< 1024px) */}
       <div className="flex lg:hidden mb-5 p-1 rounded-xl bg-zinc-100 border border-zinc-200/90 text-xs font-medium shadow-2xs">
         <button
           type="button"
           onClick={() => setMobileTab('task')}
-          className={`flex-1 flex items-center justify-center gap-2 py-2.5 min-h-[44px] rounded-lg transition-all duration-150 ease-out active:scale-[0.97] select-none ${
+          className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-2 py-2.5 min-h-[44px] rounded-lg transition-all duration-150 ease-out active:scale-[0.97] select-none text-[11px] sm:text-xs ${
             mobileTab === 'task'
               ? 'bg-white text-zinc-950 font-semibold shadow-xs'
               : 'text-zinc-500 hover:text-zinc-900'
           }`}
         >
-          <Layers className="w-4 h-4" />
-          <span>Active Stage Task</span>
+          <Layers className="w-4 h-4 shrink-0" />
+          <span className="truncate">Active Stage Task</span>
         </button>
 
         <button
           type="button"
           onClick={() => setMobileTab('context')}
-          className={`flex-1 flex items-center justify-center gap-2 py-2.5 min-h-[44px] rounded-lg transition-all duration-150 ease-out active:scale-[0.97] select-none ${
+          className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-2 py-2.5 min-h-[44px] rounded-lg transition-all duration-150 ease-out active:scale-[0.97] select-none text-[11px] sm:text-xs ${
             mobileTab === 'context'
               ? 'bg-white text-zinc-950 font-semibold shadow-xs'
               : 'text-zinc-500 hover:text-zinc-900'
           }`}
         >
-          <FileText className="w-4 h-4" />
-          <span>Hypothesis & Evidence</span>
+          <FileText className="w-4 h-4 shrink-0" />
+          <span className="truncate">Hypothesis & Evidence</span>
         </button>
       </div>
 

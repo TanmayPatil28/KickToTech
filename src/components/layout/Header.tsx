@@ -31,14 +31,14 @@ export const Header: FC<HeaderProps> = ({
   return (
     <>
       <header className="border-b border-zinc-200/80 bg-white/95 backdrop-blur-md sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 lg:px-8 h-14 flex items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 h-14 flex items-center justify-between gap-2 sm:gap-4">
           {/* Logo & Identity */}
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <div className="w-8 h-8 rounded-lg bg-zinc-900 flex items-center justify-center text-white shadow-2xs">
               <Compass className="w-4 h-4 stroke-[2.2]" />
             </div>
             <div className="flex items-center gap-2">
-              <span className="font-semibold text-base tracking-tight text-zinc-950 font-sans">
+              <span className="font-semibold text-sm sm:text-base tracking-tight text-zinc-950 font-sans">
                 ProblemPilot
               </span>
               <span className="hidden sm:inline-flex text-[10px] uppercase font-mono tracking-wider px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-600 border border-zinc-200/80 font-medium">
@@ -47,8 +47,8 @@ export const Header: FC<HeaderProps> = ({
             </div>
           </div>
 
-          {/* Center: Quiet Status Dot */}
-          <div className="hidden md:flex items-center gap-2 text-xs text-zinc-600 bg-zinc-50 border border-zinc-200/80 px-3 py-1 rounded-full font-sans shadow-2xs">
+          {/* Center: Quiet Status Dot (visible on wide screens >= 1024px) */}
+          <div className="hidden lg:flex items-center gap-2 text-xs text-zinc-600 bg-zinc-50 border border-zinc-200/80 px-3 py-1 rounded-full font-sans shadow-2xs">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
             <span className="text-zinc-400 text-[11px] font-medium font-mono">Stage:</span>
             <span className="font-semibold text-zinc-800 text-[11px]">
@@ -57,7 +57,7 @@ export const Header: FC<HeaderProps> = ({
           </div>
 
           {/* Right Controls: Demo Mode & Reset */}
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             {/* Demo Mode Dropdown */}
             <div className="relative">
               <button

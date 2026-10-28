@@ -245,12 +245,13 @@ export const Stage3Experiment: FC<Stage3ExperimentProps> = ({
         )}
 
         {/* Action Controls */}
-        <div className="flex items-center justify-between pt-6 border-t border-[#212a45]">
+        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-6 border-t border-[#212a45]">
           <TactileButton
             variant="secondary"
             size="md"
             onClick={onBackToAnalysis}
             icon={<ArrowLeft className="w-4 h-4" />}
+            className="w-full sm:w-auto justify-center"
           >
             Back to Assumptions
           </TactileButton>
@@ -261,6 +262,7 @@ export const Stage3Experiment: FC<Stage3ExperimentProps> = ({
             onClick={onProceedToFindings}
             icon={<ArrowRight className="w-4 h-4" />}
             iconPosition="right"
+            className="w-full sm:w-auto justify-center"
           >
             Proceed to Log Findings
           </TactileButton>

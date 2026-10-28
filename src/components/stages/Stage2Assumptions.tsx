@@ -358,12 +358,13 @@ export const Stage2Assumptions: FC<Stage2AssumptionsProps> = ({
         </div>
 
         {/* Footer Actions */}
-        <div className="flex items-center justify-between pt-6 border-t border-[#212a45]">
+        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-6 border-t border-[#212a45]">
           <TactileButton
             variant="secondary"
             size="md"
             onClick={onEditProblem}
             icon={<ArrowLeft className="w-4 h-4" />}
+            className="w-full sm:w-auto justify-center"
           >
             Refine Formulation
           </TactileButton>
@@ -375,6 +376,7 @@ export const Stage2Assumptions: FC<Stage2AssumptionsProps> = ({
             onClick={onProceedToTest}
             icon={<ArrowRight className="w-4 h-4" />}
             iconPosition="right"
+            className="w-full sm:w-auto justify-center"
           >
             Design Validation Experiment
           </TactileButton>
