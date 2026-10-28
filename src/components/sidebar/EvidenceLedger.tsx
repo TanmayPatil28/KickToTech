@@ -19,29 +19,31 @@ export const EvidenceLedger: FC<EvidenceLedgerProps> = ({
   const [viewMode, setViewMode] = useState<'findings' | 'timeline'>('findings');
 
   return (
-    <div className={`bg-[#181c2a] border border-[#242a3e] rounded-2xl p-4 sm:p-5 shadow-sm space-y-4 ${className}`}>
+    <div className={`bg-[#101524] border border-[#212a45] rounded-xl p-4 shadow-premium-card space-y-4 ${className}`}>
       {/* Header with View Toggle */}
-      <div className="flex items-center justify-between pb-2 border-b border-[#242a3e]/80">
-        <div className="flex items-center gap-2 text-xs font-mono uppercase text-slate-700 font-bold">
-          {viewMode === 'findings' ? (
-            <FileText className="w-4 h-4 text-teal-700" />
-          ) : (
-            <History className="w-4 h-4 text-indigo-700" />
-          )}
-          <span className="font-semibold tracking-wider">
+      <div className="flex items-center justify-between pb-2.5 border-b border-[#212a45]">
+        <div className="flex items-center gap-2 text-xs font-mono uppercase text-slate-400 font-semibold tracking-wider">
+          <div className="w-5 h-5 rounded bg-teal-500/10 text-teal-600 flex items-center justify-center">
+            {viewMode === 'findings' ? (
+              <FileText className="w-3.5 h-3.5" />
+            ) : (
+              <History className="w-3.5 h-3.5" />
+            )}
+          </div>
+          <span className="font-semibold tracking-wider text-slate-200">
             {viewMode === 'findings' ? 'Evidence Ledger' : 'Audit Timeline'}
           </span>
         </div>
 
         {/* Mode Selector */}
-        <div className="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-[10px] font-mono">
+        <div className="flex items-center bg-[#151b2e] p-0.5 rounded-lg border border-[#212a45] text-[10px] font-mono">
           <button
             type="button"
             onClick={() => setViewMode('findings')}
             className={`px-2.5 py-1 rounded-md transition-all active:scale-[0.97] cursor-pointer ${
               viewMode === 'findings'
-                ? 'bg-teal-700 text-white font-semibold shadow-2xs'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-zinc-900 text-white font-semibold shadow-xs'
+                : 'text-zinc-600 hover:text-zinc-900'
             }`}
           >
             Findings ({findings.length})
@@ -51,8 +53,8 @@ export const EvidenceLedger: FC<EvidenceLedgerProps> = ({
             onClick={() => setViewMode('timeline')}
             className={`px-2.5 py-1 rounded-md transition-all active:scale-[0.97] cursor-pointer ${
               viewMode === 'timeline'
-                ? 'bg-slate-800 text-white font-semibold shadow-2xs'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-zinc-900 text-white font-semibold shadow-xs'
+                : 'text-zinc-600 hover:text-zinc-900'
             }`}
           >
             Timeline ({ledger.length})
@@ -60,43 +62,53 @@ export const EvidenceLedger: FC<EvidenceLedgerProps> = ({
         </div>
       </div>
 
-      {/* Findings Mode */}
+      {/* Mode 1: Logged Findings */}
       {viewMode === 'findings' && (
-        <div className="space-y-2.5">
+        <div className="space-y-2.5 max-h-[360px] overflow-y-auto pr-1">
           {findings.length === 0 ? (
-            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-center text-xs text-slate-500 italic font-sans">
-              No empirical findings recorded yet.
+            <div className="p-5 rounded-lg bg-[#151b2e] border border-dashed border-[#212a45] text-center text-slate-500 text-xs">
+              <p className="font-medium text-slate-700">No findings recorded yet.</p>
+              <p className="text-[11px] text-slate-400 mt-0.5">
+                Observations recorded in Stage 4 will trace here.
+              </p>
             </div>
           ) : (
-            findings.map((f, idx) => (
+            findings.map((finding, idx) => (
               <div
-                key={f.id}
-                className="p-3 rounded-xl bg-white border border-slate-200 text-xs space-y-1.5 shadow-2xs hover:border-slate-300 transition-colors"
+                key={finding.id}
+                className="p-3 rounded-lg bg-[#151b2e] border border-[#212a45] space-y-1.5 text-xs hover:border-[#2f3b60] transition-colors shadow-2xs"
               >
-                <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center justify-between gap-1.5">
                   <div className="flex items-center gap-1.5 flex-wrap">
-                    <span className="font-mono text-[10px] text-slate-400 font-bold">
+                    <span className="font-mono text-[10px] text-slate-400 font-semibold">
                       #{idx + 1}
                     </span>
-                    <Badge variant="source" source={f.sourceType} />
+                    <Badge variant="source" source={finding.sourceType} />
+                    {finding.relatedHypothesis && (
+                      <span className="px-1.5 py-0.5 rounded text-[10px] font-mono text-purple-700 bg-purple-50 border border-purple-200">
+                        {finding.relatedHypothesis}
+                      </span>
+                    )}
                   </div>
                   {onRemoveFinding && (
                     <button
                       type="button"
-                      onClick={() => onRemoveFinding(f.id)}
-                      title="Remove finding"
-                      className="text-slate-400 hover:text-rose-600 p-1 rounded hover:bg-rose-50 transition-colors"
+                      onClick={() => onRemoveFinding(finding.id)}
+                      title="Remove this finding"
+                      className="text-slate-400 hover:text-rose-600 p-0.5 transition-colors cursor-pointer active:scale-[0.97]"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
                   )}
                 </div>
-                <p className="text-slate-900 font-medium leading-relaxed font-sans">
-                  {f.description}
+
+                <p className="text-zinc-900 leading-snug font-normal text-xs">
+                  {finding.description}
                 </p>
-                {(f.context || f.contextNotes) && (
+
+                {finding.context && (
                   <p className="text-[11px] text-slate-500 italic font-sans">
-                    {f.context || f.contextNotes}
+                    Context: {finding.context}
                   </p>
                 )}
               </div>
@@ -105,29 +117,33 @@ export const EvidenceLedger: FC<EvidenceLedgerProps> = ({
         </div>
       )}
 
-      {/* Audit Timeline Mode */}
+      {/* Mode 2: Chronological System Audit Timeline */}
       {viewMode === 'timeline' && (
-        <div className="space-y-2">
+        <div className="space-y-2 max-h-[360px] overflow-y-auto pr-1">
           {ledger.length === 0 ? (
-            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-center text-xs text-slate-500 italic font-sans">
-              Audit timeline is empty.
+            <div className="p-5 rounded-lg bg-[#151b2e] border border-dashed border-[#212a45] text-center text-slate-400 text-xs">
+              <p className="font-medium text-slate-300">Audit timeline empty.</p>
             </div>
           ) : (
             ledger.map((entry) => (
               <div
                 key={entry.id}
-                className="p-2.5 rounded-xl bg-white border border-slate-200 text-xs space-y-1 shadow-2xs"
+                className="p-2.5 rounded-lg bg-[#151b2e] border border-[#212a45] text-xs space-y-1"
               >
-                <div className="flex items-center justify-between text-[10px] font-mono text-slate-500">
-                  <span className="font-semibold text-slate-700">{entry.type}</span>
-                  <div className="flex items-center gap-1">
-                    <Clock className="w-3 h-3 text-slate-400" />
-                    <span>{new Date(entry.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                  </div>
+                <div className="flex items-center justify-between text-[10px] font-mono text-slate-400">
+                  <span className="font-semibold text-teal-400 uppercase">
+                    {entry.type.replace(/_/g, ' ')}
+                  </span>
+                  <span className="flex items-center gap-1 text-slate-400">
+                    <Clock className="w-3 h-3" />
+                    {new Date(entry.timestamp).toLocaleTimeString([], {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      second: '2-digit',
+                    })}
+                  </span>
                 </div>
-                <p className="text-slate-800 text-[11px] leading-snug font-sans">
-                  {entry.summary}
-                </p>
+                <p className="text-slate-300 text-xs font-sans leading-relaxed">{entry.summary}</p>
               </div>
             ))
           )}

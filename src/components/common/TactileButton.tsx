@@ -23,30 +23,30 @@ export const TactileButton: FC<TactileButtonProps> = ({
   ...rest
 }) => {
   const baseStyles =
-    'inline-flex items-center justify-center font-medium transition-all duration-150 ease-out select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2';
+    'inline-flex items-center justify-center font-medium transition-all duration-150 ease-out select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[#090c15] tracking-tight';
 
   const tactileMotion = disabled || isLoading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer active:scale-[0.97]';
 
   const variantStyles = {
     primary:
-      'bg-teal-700 hover:bg-teal-800 text-white shadow-xs hover:shadow-sm border border-teal-800/40 font-semibold',
+      'bg-teal-500 hover:bg-teal-400 text-slate-950 font-semibold border border-teal-400/80 shadow-sm focus-visible:ring-teal-400',
     secondary:
-      'bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 hover:border-slate-400 shadow-2xs',
+      'bg-[#151b2e] hover:bg-[#1c243e] text-slate-200 border border-[#263152] hover:border-slate-500 shadow-2xs focus-visible:ring-slate-400',
     danger:
-      'bg-rose-600 hover:bg-rose-700 text-white border border-rose-700 shadow-2xs',
+      'bg-rose-600 hover:bg-rose-500 text-white border border-rose-500 shadow-2xs focus-visible:ring-rose-400',
     ghost:
-      'bg-transparent hover:bg-slate-100 text-slate-600 hover:text-slate-900',
+      'bg-transparent hover:bg-[#151b2e] text-slate-400 hover:text-slate-100 focus-visible:ring-slate-400',
     outline:
-      'bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 hover:border-slate-400 shadow-2xs',
+      'bg-transparent hover:bg-[#151b2e] text-slate-300 border border-[#212a45] hover:border-slate-500 shadow-2xs focus-visible:ring-slate-400',
     subtle:
-      'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200',
+      'bg-[#151b2e]/70 hover:bg-[#1c243e] text-slate-300 border border-[#212a45] focus-visible:ring-slate-400',
   }[variant];
 
   // Touch targets >= 44px on mobile ergonomic standards
   const sizeStyles = {
-    sm: 'text-xs px-2.5 py-1.5 min-h-[36px] sm:min-h-[32px] rounded-md gap-1.5',
-    md: 'text-xs sm:text-sm px-4 py-2 min-h-[44px] rounded-lg gap-2',
-    lg: 'text-sm sm:text-base px-5 py-2.5 min-h-[48px] rounded-lg gap-2.5 font-semibold',
+    sm: 'text-xs px-2.5 py-1.5 min-h-[36px] sm:min-h-[32px] rounded-lg gap-1.5 font-medium',
+    md: 'text-xs sm:text-sm px-4 py-2 min-h-[44px] rounded-xl gap-2 font-medium',
+    lg: 'text-sm sm:text-base px-5 py-2.5 min-h-[48px] rounded-xl gap-2.5 font-semibold',
   }[size];
 
   return (

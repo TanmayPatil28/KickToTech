@@ -1,5 +1,5 @@
 import { Fragment, type FC } from 'react';
-import { Check, ChevronRight } from 'lucide-react';
+import { Check } from 'lucide-react';
 import type { Stage, WorkflowStage } from '../../types/index.ts';
 
 export interface StageProgressBarProps {
@@ -64,9 +64,9 @@ export const StageProgressBar: FC<StageProgressBarProps> = ({
   return (
     <nav
       aria-label="Validation Workflow Progress"
-      className={`bg-white border-b border-slate-200/90 px-4 lg:px-8 py-2 overflow-x-auto shadow-2xs ${className}`}
+      className={`bg-white border-b border-zinc-200/80 px-4 lg:px-8 py-2 overflow-x-auto ${className}`}
     >
-      <div className="max-w-7xl mx-auto flex items-center justify-between min-w-[650px] sm:min-w-0">
+      <div className="max-w-7xl mx-auto flex items-center justify-between min-w-[620px] sm:min-w-0">
         {STAGES.map((stage, idx) => {
           const info = STAGE_META[stage];
           const isCurrent = stage === currentStage;
@@ -89,42 +89,39 @@ export const StageProgressBar: FC<StageProgressBarProps> = ({
                     ? check.reason || 'Complete previous steps before advancing.'
                     : `Switch to Stage ${info.step}: ${info.title}`
                 }
-                className={`flex items-center gap-2.5 py-1.5 px-3 rounded-lg transition-all duration-150 ease-out text-left select-none min-h-[44px] ${
+                className={`flex items-center gap-2 py-1.5 px-2.5 rounded-lg transition-all duration-150 ease-out text-left select-none min-h-[44px] ${
                   isCurrent
-                    ? 'bg-teal-50 border border-teal-300 text-teal-900 shadow-2xs'
+                    ? 'bg-zinc-100 text-zinc-950 font-semibold'
                     : isClickable
-                    ? 'hover:bg-slate-50 cursor-pointer text-slate-700 active:scale-[0.97]'
-                    : 'opacity-40 cursor-not-allowed text-slate-400'
+                    ? 'hover:bg-zinc-50 cursor-pointer text-zinc-600 hover:text-zinc-900 active:scale-[0.98]'
+                    : 'opacity-35 cursor-not-allowed text-zinc-400'
                 }`}
               >
                 <div
-                  className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-mono font-semibold transition-colors shrink-0 ${
+                  className={`w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-mono font-bold transition-all shrink-0 ${
                     isCompleted
-                      ? 'bg-emerald-50 text-emerald-700 border border-emerald-300'
+                      ? 'bg-emerald-600 text-white'
                       : isCurrent
-                      ? 'bg-teal-700 text-white shadow-2xs'
-                      : 'bg-slate-100 border border-slate-200 text-slate-500'
+                      ? 'bg-zinc-900 text-white shadow-xs'
+                      : 'bg-zinc-100 text-zinc-500'
                   }`}
                 >
-                  {isCompleted ? <Check className="w-3.5 h-3.5" /> : info.step}
+                  {isCompleted ? <Check className="w-3 h-3 stroke-[2.5]" /> : info.step}
                 </div>
                 <div className="flex flex-col">
                   <span
-                    className={`text-xs font-medium tracking-tight ${
-                      isCurrent ? 'text-teal-950 font-semibold' : 'text-slate-700'
+                    className={`text-xs tracking-tight ${
+                      isCurrent ? 'text-zinc-950 font-semibold' : 'text-zinc-600 font-medium'
                     }`}
                   >
-                    <span className="hidden sm:inline">{info.title}</span>
-                    <span className="sm:hidden">{info.short}</span>
-                  </span>
-                  <span className="text-[10px] text-slate-500 hidden xl:inline">
-                    {info.subtitle}
+                    <span className="hidden md:inline">{info.title}</span>
+                    <span className="md:hidden">{info.short}</span>
                   </span>
                 </div>
               </button>
 
               {idx < STAGES.length - 1 && (
-                <ChevronRight className="w-4 h-4 text-slate-300 shrink-0 mx-1 hidden md:block" />
+                <div className="flex-1 max-w-[40px] h-px bg-zinc-200 hidden sm:block mx-1" />
               )}
             </Fragment>
           );

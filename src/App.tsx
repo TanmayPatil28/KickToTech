@@ -152,9 +152,9 @@ export function App() {
       {/* Global Alerts / Errors */}
       {(transitionError || apiError) && (
         <div className="max-w-7xl mx-auto w-full px-4 lg:px-8 mt-4 animate-stage-enter">
-          <div className="p-4 rounded-xl bg-rose-50 border border-rose-300 text-rose-900 text-xs flex items-center justify-between gap-3 shadow-sm font-sans">
+          <div className="p-4 rounded-xl bg-rose-950/40 border border-rose-500/30 text-rose-200 text-xs flex items-center justify-between gap-3 shadow-sm font-sans">
             <div className="flex items-center gap-2.5">
-              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+              <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
               <span className="font-medium">{transitionError || apiError}</span>
             </div>
             <button
@@ -163,7 +163,7 @@ export function App() {
                 clearTransitionError();
                 setApiError(null);
               }}
-              className="text-rose-500 hover:text-rose-800 p-1 rounded-md transition-colors"
+              className="text-rose-400 hover:text-rose-200 p-1 rounded-md transition-colors cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -256,7 +256,7 @@ export function App() {
       />
 
       {/* Clean Analytical Footer */}
-      <footer className="border-t border-slate-200/90 bg-white py-4 px-4 text-center text-xs text-slate-500 font-sans mt-auto">
+      <footer className="border-t border-[#1d243b] bg-[#0c0f19] py-4 px-4 text-center text-xs text-slate-500 font-sans mt-auto">
         ProblemPilot &bull; The Evidence Challenge &bull; Epistemic Integrity Validation Engine &bull; PromptWars &times; KickToTech
       </footer>
     </div>

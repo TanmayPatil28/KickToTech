@@ -17,14 +17,14 @@ export const Workspace: FC<WorkspaceProps> = ({
   return (
     <div className={`max-w-7xl mx-auto w-full px-4 lg:px-8 py-6 flex-1 flex flex-col ${className}`}>
       {/* Mobile Tab Switcher (< 1024px) */}
-      <div className="flex lg:hidden mb-5 p-1 rounded-xl bg-slate-100 border border-slate-200 text-xs font-medium shadow-2xs">
+      <div className="flex lg:hidden mb-5 p-1 rounded-xl bg-zinc-100 border border-zinc-200/90 text-xs font-medium shadow-2xs">
         <button
           type="button"
           onClick={() => setMobileTab('task')}
           className={`flex-1 flex items-center justify-center gap-2 py-2.5 min-h-[44px] rounded-lg transition-all duration-150 ease-out active:scale-[0.97] select-none ${
             mobileTab === 'task'
-              ? 'bg-teal-700 text-white font-semibold shadow-xs'
-              : 'text-slate-600 hover:text-slate-900'
+              ? 'bg-white text-zinc-950 font-semibold shadow-xs'
+              : 'text-zinc-500 hover:text-zinc-900'
           }`}
         >
           <Layers className="w-4 h-4" />
@@ -36,8 +36,8 @@ export const Workspace: FC<WorkspaceProps> = ({
           onClick={() => setMobileTab('context')}
           className={`flex-1 flex items-center justify-center gap-2 py-2.5 min-h-[44px] rounded-lg transition-all duration-150 ease-out active:scale-[0.97] select-none ${
             mobileTab === 'context'
-              ? 'bg-slate-800 text-white font-semibold shadow-xs'
-              : 'text-slate-600 hover:text-slate-900'
+              ? 'bg-white text-zinc-950 font-semibold shadow-xs'
+              : 'text-zinc-500 hover:text-zinc-900'
           }`}
         >
           <FileText className="w-4 h-4" />
