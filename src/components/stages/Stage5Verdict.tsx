@@ -52,12 +52,12 @@ const VERDICT_CONFIG: Record<
     border: 'border-amber-700/80',
     icon: AlertTriangle,
     summary:
-      'The available findings do not justify a reliable conclusion. Observations are too sparse, subjective, or mixed to validate that the problem exists as formulated.',
+      'We do not have enough real evidence to make a confident decision yet. The current notes are too few, too vague, or mixed to prove this is a real problem.',
     actionProtocol: [
-      'Stop any solution coding or prototype development immediately.',
-      'Conduct 5 targeted retrospective interviews focusing strictly on real past friction events.',
-      'Probe whether participants experienced acute pain or are merely expressing polite hypothetical interest.',
-      'Verify whether existing workarounds (e.g. calendars, notes, paper) already suffice.',
+      'Hold off on writing code or building new prototypes for now.',
+      'Do 5 quick interviews asking people how they handled this problem in the past.',
+      'Check whether they have real, acute pain or are just being polite.',
+      'Find out if free tools (like calendars, notes, or paper) already work well enough for them.',
     ],
   },
   'INSUFFICIENT EVIDENCE': {
@@ -67,12 +67,12 @@ const VERDICT_CONFIG: Record<
     border: 'border-amber-700/80',
     icon: AlertTriangle,
     summary:
-      'The available findings do not justify a reliable conclusion. Observations are too sparse, subjective, or mixed to validate that the problem exists as formulated.',
+      'We do not have enough real evidence to make a confident decision yet. The current notes are too few, too vague, or mixed to prove this is a real problem.',
     actionProtocol: [
-      'Stop any solution coding or prototype development immediately.',
-      'Conduct 5 targeted retrospective interviews focusing strictly on real past friction events.',
-      'Probe whether participants experienced acute pain or are merely expressing polite hypothetical interest.',
-      'Verify whether existing workarounds (e.g. calendars, notes, paper) already suffice.',
+      'Hold off on writing code or building new prototypes for now.',
+      'Do 5 quick interviews asking people how they handled this problem in the past.',
+      'Check whether they have real, acute pain or are just being polite.',
+      'Find out if free tools (like calendars, notes, or paper) already work well enough for them.',
     ],
   },
   REVISE_THE_HYPOTHESIS: {
@@ -82,12 +82,12 @@ const VERDICT_CONFIG: Record<
     border: 'border-rose-700/80',
     icon: RotateCcw,
     summary:
-      'The findings weaken the original formulation or indicate that users find existing workarounds satisfactory. A narrower or redirected problem must be investigated.',
+      'User feedback shows that current free tools are already good enough, or the problem is different than you thought. You should pivot or narrow down your idea.',
     actionProtocol: [
-      'Accept that user behavior currently favors existing tools and substitutes.',
-      'Pinpoint the exact sub-step where current workarounds break down catastrophically.',
-      'Narrow the target cohort to users with extreme operational constraints.',
-      'Return to Stage 1 and re-formulate the problem around the uncovered bottleneck.',
+      'Acknowledge that people are happy enough with their current workarounds.',
+      'Find the exact moment where existing tools truly fail people.',
+      'Narrow down your target audience to users who feel this pain most intensely.',
+      'Go back to Stage 1 and rewrite your problem around the real bottleneck.',
     ],
   },
   'REVISE THE HYPOTHESIS': {
@@ -97,12 +97,12 @@ const VERDICT_CONFIG: Record<
     border: 'border-rose-700/80',
     icon: RotateCcw,
     summary:
-      'The findings weaken the original formulation or indicate that users find existing workarounds satisfactory. A narrower or redirected problem must be investigated.',
+      'User feedback shows that current free tools are already good enough, or the problem is different than you thought. You should pivot or narrow down your idea.',
     actionProtocol: [
-      'Accept that user behavior currently favors existing tools and substitutes.',
-      'Pinpoint the exact sub-step where current workarounds break down catastrophically.',
-      'Narrow the target cohort to users with extreme operational constraints.',
-      'Return to Stage 1 and re-formulate the problem around the uncovered bottleneck.',
+      'Acknowledge that people are happy enough with their current workarounds.',
+      'Find the exact moment where existing tools truly fail people.',
+      'Narrow down your target audience to users who feel this pain most intensely.',
+      'Go back to Stage 1 and rewrite your problem around the real bottleneck.',
     ],
   },
   EVIDENCE_SUPPORTS_FURTHER_TESTING: {
@@ -112,12 +112,12 @@ const VERDICT_CONFIG: Record<
     border: 'border-emerald-700/80',
     icon: CheckCircle2,
     summary:
-      'The recorded findings support continuing the investigation with a deeper test. Note: This does NOT establish broad market demand or product-market fit.',
+      'Your evidence shows real interest and pain, so it makes sense to keep testing. Keep in mind: this does not mean everyone will buy it yet.',
     actionProtocol: [
-      'Design a commitment test measuring user willingness to invest time, data, or money.',
-      'Observe 10 additional participants in their live operating environment.',
-      'Test whether users will actively adopt a manual concierge or low-fidelity prototype.',
-      'Avoid scaling engineering build-out until behavioral repeat usage is established.',
+      'Test if users are willing to commit real time, data, or money.',
+      'Watch 10 more target users in their actual everyday routine.',
+      'Try solving their problem manually before writing software.',
+      'Hold off on major coding until users repeatedly ask to use your solution.',
     ],
   },
   'EVIDENCE SUPPORTS FURTHER TESTING': {
@@ -127,12 +127,12 @@ const VERDICT_CONFIG: Record<
     border: 'border-emerald-700/80',
     icon: CheckCircle2,
     summary:
-      'The recorded findings support continuing the investigation with a deeper test. Note: This does NOT establish broad market demand or product-market fit.',
+      'Your evidence shows real interest and pain, so it makes sense to keep testing. Keep in mind: this does not mean everyone will buy it yet.',
     actionProtocol: [
-      'Design a commitment test measuring user willingness to invest time, data, or money.',
-      'Observe 10 additional participants in their live operating environment.',
-      'Test whether users will actively adopt a manual concierge or low-fidelity prototype.',
-      'Avoid scaling engineering build-out until behavioral repeat usage is established.',
+      'Test if users are willing to commit real time, data, or money.',
+      'Watch 10 more target users in their actual everyday routine.',
+      'Try solving their problem manually before writing software.',
+      'Hold off on major coding until users repeatedly ask to use your solution.',
     ],
   },
 };

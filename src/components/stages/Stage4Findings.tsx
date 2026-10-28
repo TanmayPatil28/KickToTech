@@ -122,7 +122,7 @@ export const Stage4Findings: FC<Stage4FindingsProps> = ({
               Log Empirical Evidence & Counter-Signals
             </h2>
             <p className="text-sm text-slate-400 mt-1 leading-relaxed max-w-2xl font-sans">
-              Record what participants actually did, spent, or failed to do. Distinguish empirical behavioral observations from subjective enthusiasm.
+              Record what people actually did, spent time on, or struggled with. Focus on real past actions rather than polite compliments or opinions.
             </p>
           </div>
 
@@ -224,7 +224,7 @@ export const Stage4Findings: FC<Stage4FindingsProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label htmlFor="sourceType" className="block text-xs font-semibold text-zinc-800 mb-1.5">
-                Evidence Source Classification
+                Evidence Type (What kind of evidence is this?)
               </label>
               <select
                 id="sourceType"
@@ -233,16 +233,16 @@ export const Stage4Findings: FC<Stage4FindingsProps> = ({
                 className="w-full bg-zinc-50 border border-zinc-200 focus:border-zinc-900 focus:ring-2 focus:ring-zinc-900/10 rounded-xl px-3 py-2 text-xs text-zinc-900 focus:outline-none min-h-[44px] font-sans"
               >
                 <option value="direct_observation">
-                  Direct Observation (Recorded behavior in test session)
+                  Direct Observation (What you watched someone do)
                 </option>
                 <option value="user_reported">
-                  User-Reported Experience (Recalled past factual event)
+                  User-Reported Experience (What they told you they did in the past)
                 </option>
                 <option value="interpretation">
-                  Interpretation (Observer deduction or inference)
+                  Interpretation (What you think it means)
                 </option>
                 <option value="assumption">
-                  Assumption (Unverified claim or speculation)
+                  Assumption (Unverified guess)
                 </option>
               </select>
             </div>
@@ -270,14 +270,14 @@ export const Stage4Findings: FC<Stage4FindingsProps> = ({
           {/* Context Notes */}
           <div>
             <label htmlFor="contextNotes" className="block text-xs font-semibold text-zinc-800 mb-1.5">
-              Participant Background & Environmental Context (Optional)
+              Participant Details & Context (Optional)
             </label>
             <input
               id="contextNotes"
               type="text"
               value={contextNotes}
               onChange={(e) => setContextNotes(e.target.value)}
-              placeholder="e.g. 2nd-year mechanical undergraduate; lathe station during Friday lab session"
+              placeholder="e.g. 2nd-year engineering student in Friday lab session"
               className="w-full bg-zinc-50 border border-zinc-200 focus:border-zinc-900 focus:ring-2 focus:ring-zinc-900/10 rounded-xl px-3.5 py-2.5 text-xs text-zinc-900 placeholder-zinc-400 focus:outline-none min-h-[44px] font-sans"
             />
           </div>

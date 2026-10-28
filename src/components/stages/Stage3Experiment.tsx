@@ -69,7 +69,7 @@ export const Stage3Experiment: FC<Stage3ExperimentProps> = ({
               {experiment.title || 'Targeted Behavioral Inquiry Experiment'}
             </h2>
             <p className="text-sm text-zinc-600 mt-1 leading-relaxed font-sans">
-              The smallest practical test to challenge your highest-risk assumption with empirical behavior.
+              The fastest, simplest test to see if your biggest assumption holds true with real people.
             </p>
           </div>
 

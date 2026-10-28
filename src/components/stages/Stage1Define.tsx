@@ -72,7 +72,7 @@ export const Stage1Define: FC<Stage1DefineProps> = ({
             Articulate the proposed problem hypothesis
           </h2>
           <p className="text-xs sm:text-sm text-zinc-600 mt-1 leading-relaxed max-w-2xl font-sans">
-            Specify the exact friction point, who experiences it, and the operational context. Focus strictly on the friction rather than pitching a solution.
+            Describe the real daily frustration people face, who struggles with it, and when it happens. Focus on their pain rather than pitching features.
           </p>
         </div>
 
