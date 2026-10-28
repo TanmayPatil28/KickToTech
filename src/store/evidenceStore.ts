@@ -15,7 +15,6 @@ import {
   isProblemDirty,
   canTransitionTo as canTransitionToStore,
 } from './stateMachine.ts';
-import { canTransitionTo as canTransitionToDomain } from '../domain/stateMachine.ts';
 import { DEMO_SCENARIO_A, DEMO_SCENARIO_B } from '../domain/demoData.ts';
 
 export { STORAGE_KEY };
@@ -287,16 +286,10 @@ export function useEvidenceStore() {
     (id: string) => {
       setState((prev) => {
         const nextFindings = prev.findings.filter((f) => f.id !== id);
-        const nextStage: WorkflowStage =
-          nextFindings.length === 0 && prev.stage === 'FINDINGS_ENTERED'
-            ? 'TEST_DEFINED'
-            : prev.stage;
         const now = new Date().toISOString();
 
         return {
           ...prev,
-          stage: nextStage,
-          currentStage: nextStage,
           findings: nextFindings,
           updatedAt: now,
           lastUpdated: now,
@@ -334,8 +327,7 @@ export function useEvidenceStore() {
 
   const navigateTo = useCallback(
     (targetStage: WorkflowStage): boolean => {
-      // Check guards using domain guard first (supports legacy tests) or store guard
-      const check = canTransitionToDomain(state, targetStage);
+      const check = canTransitionToStore(targetStage, state);
       if (!check.allowed) {
         setTransitionError(check.reason || 'Invalid stage transition.');
         return false;

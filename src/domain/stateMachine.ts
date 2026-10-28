@@ -83,9 +83,6 @@ export function canTransitionTo(
       if (!state.experiment) {
         return { allowed: false, reason: 'An active experiment must be defined before recording findings.' };
       }
-      if (!state.findings || state.findings.length === 0) {
-        return { allowed: false, reason: 'At least one evidence finding must be recorded before proceeding.' };
-      }
       if (state.isProblemStale || state.isDirty) {
         return {
           allowed: false,

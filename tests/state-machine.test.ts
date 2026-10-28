@@ -345,7 +345,7 @@ describe('State Machine & Workflow Transitions (Tiers 1, 2, 3)', () => {
       expect(res.reason).toContain('experiment must be selected');
     });
 
-    it('blocks transition to FINDINGS_ENTERED when findings array is empty', () => {
+    it('allows transition to FINDINGS_ENTERED when findings array is empty and experiment is defined', () => {
       const state: CaseState = {
         ...createBaseState('TEST_DEFINED'),
         analysis: sampleAnalysis,
@@ -353,8 +353,20 @@ describe('State Machine & Workflow Transitions (Tiers 1, 2, 3)', () => {
         findings: [],
       };
       const res = canTransitionTo(state, 'FINDINGS_ENTERED');
+      expect(res.allowed).toBe(true);
+    });
+
+    it('blocks transition to EVIDENCE_REVIEWED when findings array is empty', () => {
+      const state: CaseState = {
+        ...createBaseState('FINDINGS_ENTERED'),
+        analysis: sampleAnalysis,
+        experiment: sampleExperiment,
+        findings: [],
+        verdict: sampleVerdict,
+      };
+      const res = canTransitionTo(state, 'EVIDENCE_REVIEWED');
       expect(res.allowed).toBe(false);
-      expect(res.reason).toContain('At least one evidence finding must be recorded');
+      expect(res.reason).toContain('empty findings ledger');
     });
 
     it('blocks transition to EVIDENCE_REVIEWED when verdict is null', () => {

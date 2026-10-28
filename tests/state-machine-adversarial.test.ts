@@ -583,7 +583,7 @@ describe('Adversarial Verification: State Machine & Transition Guards', () => {
       expect(forwardRes.currentStage).toBe(reversedRes.currentStage);
     });
 
-    it('identifies discrepancies between canonical store/stateMachine.ts and domain/stateMachine.ts', () => {
+    it('verifies harmony between canonical store/stateMachine.ts and domain/stateMachine.ts', () => {
       // In src/store/stateMachine.ts: Stage 3 -> Stage 4 with 0 findings is ALLOWED
       const storeState = buildState({
         currentStage: 'TEST_DEFINED',
@@ -595,7 +595,7 @@ describe('Adversarial Verification: State Machine & Transition Guards', () => {
       const storeResult = canTransitionTo('FINDINGS_ENTERED', storeState);
       expect(storeResult.allowed).toBe(true);
 
-      // Check what domain/stateMachine.ts canTransitionTo does for the same state:
+      // Check what domain/stateMachine.ts canTransitionTo does for the same state (harmonized):
       const domainCaseState: CaseState = {
         id: 'test',
         stage: 'TEST_DEFINED',
@@ -611,9 +611,8 @@ describe('Adversarial Verification: State Machine & Transition Guards', () => {
       };
 
       const domainResult = canTransitionToDomain(domainCaseState, 'FINDINGS_ENTERED');
-      // Empirical verification: domain/stateMachine.ts STILL blocks 0 findings, exposing a disparity with store/stateMachine.ts!
-      expect(domainResult.allowed).toBe(false);
-      expect(domainResult.reason).toContain('At least one evidence finding must be recorded');
+      expect(domainResult.allowed).toBe(true);
+      expect(domainResult.allowed).toBe(storeResult.allowed);
     });
   });
 
