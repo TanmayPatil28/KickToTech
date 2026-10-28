@@ -255,6 +255,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 function getApiKey(): string | undefined {
+  if (process.env.NODE_ENV === 'test') {
+    return process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
+  }
+  if (process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY.trim().length > 0) {
+    return process.env.GEMINI_API_KEY;
+  }
   try {
     const envPath = path.resolve(process.cwd(), '.env');
     if (fs.existsSync(envPath)) {
@@ -265,7 +271,7 @@ function getApiKey(): string | undefined {
       }
     }
   } catch {}
-  return process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
+  return process.env.GOOGLE_API_KEY;
 }
 
 function getModel(): string {
