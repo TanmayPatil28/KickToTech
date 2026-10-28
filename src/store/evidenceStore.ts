@@ -8,16 +8,23 @@ import type {
   ValidationExperiment,
   Verdict,
   WorkflowStage,
-} from '../types';
-import { canTransitionTo, isProblemDirty } from '../domain/stateMachine';
-import { DEMO_SCENARIO_A, DEMO_SCENARIO_B } from '../domain/demoData';
+} from '../types/index.ts';
+import {
+  STORAGE_KEY,
+  computeProblemHash,
+  isProblemDirty,
+  canTransitionTo as canTransitionToStore,
+} from './stateMachine.ts';
+import { canTransitionTo as canTransitionToDomain } from '../domain/stateMachine.ts';
+import { DEMO_SCENARIO_A, DEMO_SCENARIO_B } from '../domain/demoData.ts';
 
-const STORAGE_KEY = 'problempilot_case_v1';
+export { STORAGE_KEY };
 
 export const INITIAL_PROBLEM: ProblemInput = {
   idea: '',
   targetUser: '',
   context: '',
+  existingObservations: '',
   existingEvidence: '',
   constraints: '',
 };
@@ -25,30 +32,52 @@ export const INITIAL_PROBLEM: ProblemInput = {
 export const INITIAL_STATE: CaseState = {
   id: 'case_default',
   stage: 'DRAFT',
+  currentStage: 'DRAFT',
   problem: INITIAL_PROBLEM,
   lastAnalyzedProblem: undefined,
+  analyzedProblemHash: null,
+  isDirty: false,
   isProblemStale: false,
   analysis: null,
   experiment: null,
   alternativeExperiment: null,
   findings: [],
   ledger: [],
+  decisionBrief: null,
   verdict: null,
+  isDemo: false,
   isDemoMode: false,
   updatedAt: new Date().toISOString(),
+  lastUpdated: new Date().toISOString(),
 };
 
 function loadStoredState(): CaseState {
-  if (typeof window === 'undefined') return INITIAL_STATE;
+  if (typeof window === 'undefined' || !window.localStorage) return INITIAL_STATE;
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return INITIAL_STATE;
     const parsed = JSON.parse(raw);
-    if (parsed && typeof parsed === 'object' && parsed.stage && parsed.problem) {
-      return parsed as CaseState;
+    if (parsed && typeof parsed === 'object' && (parsed.stage || parsed.currentStage) && parsed.problem) {
+      const stage = (parsed.stage || parsed.currentStage) as WorkflowStage;
+      const isStale = parsed.analyzedProblemHash
+        ? computeProblemHash(parsed.problem) !== parsed.analyzedProblemHash
+        : Boolean(parsed.isProblemStale || parsed.isDirty);
+
+      return {
+        ...parsed,
+        stage,
+        currentStage: stage,
+        isProblemStale: isStale,
+        isDirty: isStale,
+        findings: parsed.findings || [],
+        ledger: parsed.ledger || [],
+      } as CaseState;
     }
   } catch (err) {
     console.warn('Failed to parse saved ProblemPilot case from localStorage. Resetting to initial.', err);
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch {}
   }
   return INITIAL_STATE;
 }
@@ -57,7 +86,7 @@ export function useEvidenceStore() {
   const [state, setState] = useState<CaseState>(loadStoredState);
   const [transitionError, setTransitionError] = useState<string | null>(null);
 
-  // Sync to local storage
+  // Sync to standardized local storage key
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -84,12 +113,18 @@ export function useEvidenceStore() {
     (problemUpdate: Partial<ProblemInput>) => {
       setState((prev) => {
         const nextProblem = { ...prev.problem, ...problemUpdate };
-        const stale = isProblemDirty(nextProblem, prev.lastAnalyzedProblem);
+        const stale = prev.analyzedProblemHash
+          ? computeProblemHash(nextProblem) !== prev.analyzedProblemHash
+          : isProblemDirty(nextProblem, prev.lastAnalyzedProblem);
+
+        const now = new Date().toISOString();
         const nextState: CaseState = {
           ...prev,
           problem: nextProblem,
           isProblemStale: stale,
-          updatedAt: new Date().toISOString(),
+          isDirty: stale,
+          updatedAt: now,
+          lastUpdated: now,
         };
 
         if (stale && prev.analysis) {
@@ -113,6 +148,8 @@ export function useEvidenceStore() {
   const setAnalysis = useCallback(
     (analysis: AnalysisResult, alternative?: ValidationExperiment) => {
       setState((prev) => {
+        const hash = computeProblemHash(prev.problem);
+        const now = new Date().toISOString();
         const primaryExp: ValidationExperiment = {
           id: 'EXP-1',
           title: analysis.suggestedValidationObjective || 'Targeted Behavioral Retrospective Interview',
@@ -125,6 +162,12 @@ export function useEvidenceStore() {
             'Ask them to reconstruct their most recent real experience without pitching the idea.',
             'Record the specific workarounds and tools used.',
             'Note where they encountered friction and what they did to resolve it.',
+          ],
+          nonLeadingQuestions: [
+            'Tell me about the last time you experienced this. What was the exact situation?',
+            'What tool, workaround, or manual process did you use?',
+            'What was the most difficult or frustrating part of that process?',
+            'How did you resolve it at that moment?',
           ],
           inquiryQuestions: [
             'Tell me about the last time you experienced this. What was the exact situation?',
@@ -155,9 +198,12 @@ export function useEvidenceStore() {
         return {
           ...prev,
           stage: 'ANALYZED',
+          currentStage: 'ANALYZED',
           analysis,
+          analyzedProblemHash: hash,
           lastAnalyzedProblem: { ...prev.problem },
           isProblemStale: false,
+          isDirty: false,
           experiment: primaryExp,
           alternativeExperiment: alternative || null,
           ledger: [
@@ -168,7 +214,8 @@ export function useEvidenceStore() {
               `Analysis completed: Clarity=${analysis.problemClarity.status.toUpperCase()}, ${analysis.assumptions.length} assumptions challenged.`
             ),
           ],
-          updatedAt: new Date().toISOString(),
+          updatedAt: now,
+          lastUpdated: now,
         };
       });
       setTransitionError(null);
@@ -178,15 +225,18 @@ export function useEvidenceStore() {
 
   const setExperiment = useCallback(
     (experiment: ValidationExperiment) => {
+      const now = new Date().toISOString();
       setState((prev) => ({
         ...prev,
         stage: 'TEST_DEFINED',
+        currentStage: 'TEST_DEFINED',
         experiment,
         ledger: [
           ...prev.ledger,
           addLedgerEntry('TEST_SELECTED', 'USER', `Selected validation experiment: "${experiment.title}".`),
         ],
-        updatedAt: new Date().toISOString(),
+        updatedAt: now,
+        lastUpdated: now,
       }));
       setTransitionError(null);
     },
@@ -195,10 +245,13 @@ export function useEvidenceStore() {
 
   const addFinding = useCallback(
     (findingInput: Omit<Finding, 'id' | 'createdAt'>) => {
+      const now = new Date().toISOString();
       const newFinding: Finding = {
         ...findingInput,
         id: `FND-${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 5)}`,
-        createdAt: new Date().toISOString(),
+        createdAt: now,
+        timestamp: now,
+        isCredibleObservation: findingInput.isCredibleObservation ?? true,
       };
 
       setState((prev) => {
@@ -209,6 +262,7 @@ export function useEvidenceStore() {
         return {
           ...prev,
           stage: nextStage,
+          currentStage: nextStage,
           findings: nextFindings,
           ledger: [
             ...prev.ledger,
@@ -220,7 +274,8 @@ export function useEvidenceStore() {
               }"`
             ),
           ],
-          updatedAt: new Date().toISOString(),
+          updatedAt: now,
+          lastUpdated: now,
         };
       });
       setTransitionError(null);
@@ -236,12 +291,15 @@ export function useEvidenceStore() {
           nextFindings.length === 0 && prev.stage === 'FINDINGS_ENTERED'
             ? 'TEST_DEFINED'
             : prev.stage;
+        const now = new Date().toISOString();
 
         return {
           ...prev,
           stage: nextStage,
+          currentStage: nextStage,
           findings: nextFindings,
-          updatedAt: new Date().toISOString(),
+          updatedAt: now,
+          lastUpdated: now,
         };
       });
       setTransitionError(null);
@@ -251,10 +309,13 @@ export function useEvidenceStore() {
 
   const setVerdict = useCallback(
     (verdict: Verdict) => {
+      const now = new Date().toISOString();
       setState((prev) => ({
         ...prev,
         stage: 'EVIDENCE_REVIEWED',
+        currentStage: 'EVIDENCE_REVIEWED',
         verdict,
+        decisionBrief: verdict as unknown as any,
         ledger: [
           ...prev.ledger,
           addLedgerEntry(
@@ -263,7 +324,8 @@ export function useEvidenceStore() {
             `Evidence synthesized. Verdict: ${verdict.category.replace(/_/g, ' ')}.`
           ),
         ],
-        updatedAt: new Date().toISOString(),
+        updatedAt: now,
+        lastUpdated: now,
       }));
       setTransitionError(null);
     },
@@ -272,16 +334,20 @@ export function useEvidenceStore() {
 
   const navigateTo = useCallback(
     (targetStage: WorkflowStage): boolean => {
-      const check = canTransitionTo(state, targetStage);
+      // Check guards using domain guard first (supports legacy tests) or store guard
+      const check = canTransitionToDomain(state, targetStage);
       if (!check.allowed) {
         setTransitionError(check.reason || 'Invalid stage transition.');
         return false;
       }
       setTransitionError(null);
+      const now = new Date().toISOString();
       setState((prev) => ({
         ...prev,
         stage: targetStage,
-        updatedAt: new Date().toISOString(),
+        currentStage: targetStage,
+        updatedAt: now,
+        lastUpdated: now,
       }));
       return true;
     },
@@ -295,18 +361,19 @@ export function useEvidenceStore() {
   }, []);
 
   const resetCase = useCallback(() => {
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch {}
     setState({
       ...INITIAL_STATE,
       id: `case_${Date.now()}`,
       updatedAt: new Date().toISOString(),
+      lastUpdated: new Date().toISOString(),
     });
     setTransitionError(null);
-    try {
-      localStorage.removeItem(STORAGE_KEY);
-    } catch {
-      // ignore
-    }
   }, []);
+
+  const abandonCase = resetCase;
 
   return {
     state,
@@ -321,5 +388,7 @@ export function useEvidenceStore() {
     navigateTo,
     loadDemoScenario,
     resetCase,
+    abandonCase,
+    canTransitionTo: (targetStage: WorkflowStage) => canTransitionToStore(targetStage, state),
   };
 }

@@ -74,9 +74,9 @@ export interface Assumption {
   recommendedNextAction?: string;
 
   // Backward-compatibility aliases for existing prototype and test fixtures
-  reason?: string;
-  risk?: RiskLevel;
-  nextAction?: string;
+  reason: string;
+  risk: RiskLevel;
+  nextAction: string;
 }
 
 export interface ProblemClarity {
@@ -115,11 +115,11 @@ export interface ValidationExperiment {
   hypothesis: string;
   targetParticipants?: string;
   method?: string;
-  steps?: string[];
+  steps: string[];
   /** Canonical: Strict non-leading, past-behavior inquiry questions */
   nonLeadingQuestions?: string[];
   /** Backward-compatibility alias for nonLeadingQuestions */
-  inquiryQuestions?: string[];
+  inquiryQuestions: string[];
   /** Observable data points, quotes, or timestamps to log */
   evidenceToRecord: string[];
   /** Objective indicators validating the hypothesis */
@@ -162,8 +162,8 @@ export interface Finding {
   // Backward-compatibility aliases
   relatedAssumptionId?: string;
   contextNotes?: string;
-  isCredibleObservation?: boolean;
-  createdAt?: string;
+  isCredibleObservation: boolean;
+  createdAt: string;
 }
 
 export const LEDGER_EVENT_TYPES = [
@@ -278,7 +278,7 @@ export interface ValidationState {
   isProblemStale?: boolean;
   alternativeExperiment?: ValidationExperiment | null;
   ledger?: LedgerEntry[];
-  verdict?: Verdict | DecisionBrief | null;
+  verdict?: Verdict | null;
   isDemoMode?: boolean;
   demoScenarioId?: 'A' | 'B' | 'vague_study' | 'contradictory_study' | null;
   updatedAt?: string;
@@ -287,8 +287,35 @@ export interface ValidationState {
   version?: number;
 }
 
-/** Backward-compatibility alias for legacy prototype references */
-export type CaseState = ValidationState;
+/** Legacy state contract for prototype modules and existing tests */
+export interface CaseState {
+  id: string;
+  stage: WorkflowStage;
+  problem: ProblemInput;
+  lastAnalyzedProblem?: ProblemInput;
+  isProblemStale: boolean;
+  analysis: AnalysisResult | null;
+  experiment: ValidationExperiment | null;
+  alternativeExperiment?: ValidationExperiment | null;
+  findings: Finding[];
+  ledger: LedgerEntry[];
+  verdict: Verdict | null;
+  isDemoMode: boolean;
+  demoScenarioId?: 'vague_study' | 'contradictory_study';
+  updatedAt: string;
+
+  // Dual compatibility fields so CaseState can be passed where ValidationState is used
+  currentStage?: Stage;
+  decisionBrief?: DecisionBrief | null;
+  isDirty?: boolean;
+  analyzedProblemHash?: string | null;
+  isDemo?: boolean;
+  demoScenario?: 'A' | 'B' | 'vague_study' | 'contradictory_study' | null;
+  lastUpdated?: string;
+  highestCompletedStage?: Stage;
+  highestUnlockedStage?: Stage;
+  version?: number;
+}
 
 // ============================================================================
 // 8. Server API Contracts

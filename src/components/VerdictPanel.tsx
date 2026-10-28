@@ -50,6 +50,33 @@ const VERDICT_CONFIG: Record<
     summary:
       'The recorded findings support continuing the investigation with a deeper test. Note: This does NOT establish broad market demand or product-market fit.',
   },
+  'INSUFFICIENT EVIDENCE': {
+    label: 'Insufficient Evidence',
+    bg: 'bg-amber-950/40',
+    text: 'text-amber-300',
+    border: 'border-amber-800/80',
+    icon: AlertTriangle,
+    summary:
+      'The available findings do not justify a reliable conclusion. Observations are too sparse, subjective, or mixed to validate that the problem exists as formulated.',
+  },
+  'REVISE THE HYPOTHESIS': {
+    label: 'Revise the Hypothesis',
+    bg: 'bg-rose-950/40',
+    text: 'text-rose-300',
+    border: 'border-rose-800/80',
+    icon: RotateCcw,
+    summary:
+      'The findings weaken the original formulation or indicate that users find existing workarounds satisfactory. A narrower or redirected problem must be investigated.',
+  },
+  'EVIDENCE SUPPORTS FURTHER TESTING': {
+    label: 'Evidence Supports Further Testing',
+    bg: 'bg-emerald-950/40',
+    text: 'text-emerald-300',
+    border: 'border-emerald-800/80',
+    icon: CheckCircle2,
+    summary:
+      'The recorded findings support continuing the investigation with a deeper test. Note: This does NOT establish broad market demand or product-market fit.',
+  },
 };
 
 export const VerdictPanel: FC<VerdictPanelProps> = ({
